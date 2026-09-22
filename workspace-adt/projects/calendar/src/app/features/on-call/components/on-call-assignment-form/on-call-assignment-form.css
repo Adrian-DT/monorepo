@@ -1,0 +1,83 @@
+.yko-on-call-form {
+  padding: 1.25rem;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 0.5rem;
+}
+
+.yko-on-call-form h2 {
+  margin-top: 0;
+  color: #1e293b;
+}
+
+.yko-on-call-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.yko-on-call-form__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.yko-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.yko-form-field input,
+.yko-form-field select,
+.yko-form-field textarea {
+  padding: 0.65rem;
+  font: inherit;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+}
+
+.yko-on-call-form button {
+  align-self: flex-start;
+  padding: 0.65rem 1rem;
+  color: #ffffff;
+  background: #2563eb;
+  border: 0;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.yko-error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 700px) {
+  .yko-on-call-form__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.yko-error--overlap {
+  padding: 0.75rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.25rem;
+}
+
+@media (max-width: 700px) {
+  .yko-on-call-form__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.yko-on-call-form__hint {
+  margin: 0;
+  padding: 0.75rem;
+  color: #1e40af;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}

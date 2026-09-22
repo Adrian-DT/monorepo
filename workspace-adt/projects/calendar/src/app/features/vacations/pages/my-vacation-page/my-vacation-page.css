@@ -1,0 +1,26 @@
+.yko-my-vacation-page {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.yko-my-vacation-page__header {
+  margin-bottom: 1.5rem;
+}
+
+.yko-my-vacation-page__header h1 {
+  margin: 0;
+  color: #1e293b;
+}
+
+.yko-my-vacation-page__header p {
+  margin: 0.5rem 0 0;
+  color: #64748b;
+}
+
+.yko-success-message {
+  padding: 0.75rem 1rem;
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 0.375rem;
+}

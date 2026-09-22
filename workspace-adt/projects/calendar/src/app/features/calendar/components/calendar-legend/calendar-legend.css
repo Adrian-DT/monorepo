@@ -1,0 +1,37 @@
+.yko-calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  color: #475569;
+  font-size: 0.875rem;
+}
+
+.yko-calendar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.yko-calendar-legend__color {
+  width: 0.75rem;
+  height: 0.75rem;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.yko-calendar-legend__color--vacation {
+  background: #22c55e;
+}
+
+.yko-calendar-legend__color--on-call {
+  background: #3b82f6;
+}
+
+.yko-calendar-legend__color--intervention {
+  background: #f97316;
+}
+
+.yko-calendar-legend__color--holiday {
+  background: #ef4444;
+}

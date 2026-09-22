@@ -1,0 +1,32 @@
+.yko-calendar-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.yko-calendar-toolbar__navigation {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.yko-calendar-toolbar button {
+  min-width: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  color: #1f2937;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.yko-calendar-toolbar button:hover {
+  background: #f3f4f6;
+}
+
+.yko-calendar-toolbar__title {
+  margin: 0;
+  font-size: 1.25rem;
+}

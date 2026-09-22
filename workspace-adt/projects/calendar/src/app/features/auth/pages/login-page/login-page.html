@@ -1,0 +1,43 @@
+<section class="yko-login-page">
+  <form class="yko-login-form" (ngSubmit)="login()">
+    <h1>Iniciar sesión</h1>
+
+    <div class="yko-form-field">
+      <label for="username">Usuario</label>
+
+      <input
+        id="username"
+        name="username"
+        type="text"
+        [(ngModel)]="username"
+        required
+        autocomplete="username"
+      />
+    </div>
+
+    <div class="yko-form-field">
+      <label for="password">Contraseña</label>
+
+      <input
+        id="password"
+        name="password"
+        type="password"
+        [(ngModel)]="password"
+        required
+        autocomplete="current-password"
+      />
+    </div>
+
+    @if (errorMessage) {
+      <p class="yko-error-message">
+        {{ errorMessage }}
+      </p>
+    }
+
+    <button class="yko-login-button" type="submit">Entrar</button>
+
+    <a routerLink="/forgot-password"> ¿Has olvidado tu contraseña? </a>
+
+    <small>Prueba inicial: admin / admin</small>
+  </form>
+</section>

@@ -1,0 +1,56 @@
+.yko-calendar-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 0.5rem;
+}
+
+.yko-calendar-filters__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.yko-calendar-filters select {
+  min-width: 12rem;
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+}
+
+.yko-calendar-filters__types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+}
+
+.yko-calendar-filters__types legend {
+  padding: 0 0.25rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.yko-calendar-filters__types label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+}
+
+.yko-calendar-filters__clear {
+  padding: 0.5rem 0.75rem;
+  color: #334155;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}

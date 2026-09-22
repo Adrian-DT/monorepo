@@ -1,0 +1,51 @@
+<section class="yko-on-call-list">
+  <h2>Guardias asignadas</h2>
+
+  @if (assignments().length === 0) {
+    <p>No hay guardias registradas.</p>
+  } @else {
+    <div class="yko-on-call-list__table-wrapper">
+      <table class="yko-on-call-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Festivo nacional</th>
+            <th>Festivo autonómico</th>
+            <th>Festivo local</th>
+            <th>Estado</th>
+            <th>Observaciones</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (assignment of assignments(); track assignment.id) {
+            <tr>
+              <td>{{ assignment.userName }}</td>
+              <td>{{ assignment.startDate }}</td>
+              <td>{{ assignment.endDate }}</td>
+              <td>{{ getNationalHolidayCount(assignment.id) }}</td>
+              <td>{{ getRegionalHolidayCount(assignment.id) }}</td>
+              <td>{{ getLocalHolidayCount(assignment.id) }}</td>
+              <td>
+                <span class="yko-status" [class]="'yko-status--' + assignment.status.toLowerCase()">
+                  {{ getStatusLabel(assignment.status) }}
+                </span>
+              </td>
+              <td>{{ assignment.notes || '—' }}</td>
+              <td>
+                @if (canCancel(assignment)) {
+                  <button type="button" (click)="cancel.emit(assignment.id)">Cancelar</button>
+                } @else {
+                  <span>—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

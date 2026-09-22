@@ -1,0 +1,15 @@
+<article class="yko-kpi-card" [class]="'yko-kpi-card--' + tone()">
+  <span class="yko-kpi-card__label">
+    {{ label() }}
+  </span>
+
+  <strong class="yko-kpi-card__value">
+    {{ value() }}
+  </strong>
+
+  @if (description()) {
+    <small class="yko-kpi-card__description">
+      {{ description() }}
+    </small>
+  }
+</article>

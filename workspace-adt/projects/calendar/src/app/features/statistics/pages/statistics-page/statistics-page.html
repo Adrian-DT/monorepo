@@ -1,0 +1,59 @@
+<section class="yko-statistics-page">
+  <header class="yko-statistics-page__header">
+    <h1>Estadísticas</h1>
+    <p>Consulta el resumen anual de guardias, intervenciones y vacaciones.</p>
+  </header>
+
+  <yko-statistics-filters
+    [year]="selectedYear()"
+    [userId]="selectedUserId()"
+    [users]="users()"
+    (yearChanged)="changeYear($event)"
+    (userChanged)="changeUser($event)"
+  >
+  </yko-statistics-filters>
+
+  <section class="yko-statistics-page__kpis">
+    <yko-kpi-card
+      label="Días de guardia"
+      [value]="generalStatistics().totalOnCallDays"
+      description="Días cubiertos por guardias activas"
+      tone="blue"
+    >
+    </yko-kpi-card>
+
+    <yko-kpi-card
+      label="Intervenciones"
+      [value]="generalStatistics().totalInterventions"
+      description="Intervenciones no canceladas"
+      tone="orange"
+    >
+    </yko-kpi-card>
+
+    <yko-kpi-card
+      label="Horas de intervención"
+      [value]="formatDuration(generalStatistics().totalInterventionMinutes)"
+      description="Solo intervenciones con horario informado"
+      tone="purple"
+    >
+    </yko-kpi-card>
+
+    <yko-kpi-card
+      label="Vacaciones aprobadas"
+      [value]="generalStatistics().totalVacationDays"
+      description="Días laborables aprobados"
+      tone="green"
+    >
+    </yko-kpi-card>
+
+    <yko-kpi-card
+      label="Solicitudes pendientes"
+      [value]="generalStatistics().pendingVacationRequests"
+      description="Pendientes de revisión"
+      tone="red"
+    >
+    </yko-kpi-card>
+  </section>
+
+  <yko-user-statistics-table [statistics]="userStatistics()"> </yko-user-statistics-table>
+</section>

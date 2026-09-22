@@ -1,0 +1,27 @@
+.yko-interventions-page {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.yko-interventions-page__header {
+  margin-bottom: 1.5rem;
+}
+
+.yko-interventions-page__header h1 {
+  margin: 0;
+  color: #1e293b;
+}
+
+.yko-interventions-page__header p {
+  margin: 0.5rem 0 0;
+  color: #64748b;
+}
+
+.yko-feedback-message {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 0.375rem;
+}

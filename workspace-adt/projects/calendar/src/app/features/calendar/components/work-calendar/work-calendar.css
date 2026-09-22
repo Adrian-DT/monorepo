@@ -1,0 +1,124 @@
+.yko-calendar {
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 0.5rem;
+}
+
+.yko-calendar__weekdays,
+.yko-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.yko-calendar__weekdays {
+  background: #f8fafc;
+  border-bottom: 1px solid #dbe3ee;
+}
+
+.yko-calendar__weekdays span {
+  padding: 0.75rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  color: #475569;
+}
+
+.yko-calendar-day {
+  min-height: 8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  overflow: hidden;
+  text-align: left;
+  background: #ffffff;
+  border: 0;
+  border-right: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  cursor: pointer;
+}
+
+.yko-calendar-day:hover {
+  background: #f8fafc;
+}
+
+.yko-calendar-day--outside {
+  background: #f8fafc;
+  color: #94a3b8;
+}
+
+.yko-calendar-day--today .yko-calendar-day__number {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: #2563eb;
+  border-radius: 50%;
+}
+
+@media (max-width: 640px) {
+  .yko-calendar__weekdays span {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.65rem;
+  }
+
+  .yko-calendar-day {
+    min-height: 5rem;
+    padding: 0.35rem;
+  }
+}
+
+.yko-calendar-day__number {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.yko-calendar-day__events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.yko-calendar-event {
+  display: block;
+  padding: 0.2rem 0.35rem;
+  overflow: hidden;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 0.25rem;
+}
+
+.yko-calendar-event--vacation {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.yko-calendar-event--on_call {
+  color: #1e40af;
+  background: #dbeafe;
+}
+
+.yko-calendar-event--intervention {
+  color: #9a3412;
+  background: #ffedd5;
+}
+
+.yko-calendar-event--holiday {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+@media (max-width: 900px) {
+  .yko-calendar-day {
+    min-height: 6rem;
+  }
+
+  .yko-calendar-event {
+    font-size: 0.625rem;
+  }
+}

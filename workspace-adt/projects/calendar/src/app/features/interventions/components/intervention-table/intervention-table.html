@@ -1,0 +1,100 @@
+<section class="yko-intervention-table-section">
+  <h2>Intervenciones registradas</h2>
+
+  @if (interventions().length === 0) {
+    <p>No hay intervenciones registradas.</p>
+  } @else {
+    <div class="yko-intervention-table-wrapper">
+      <table class="yko-intervention-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Usuario</th>
+            <th>Título</th>
+            <th>Franja</th>
+            <th>Modalidad</th>
+            <th>Horario</th>
+            <th>Duración</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (intervention of interventions(); track intervention.id) {
+            <tr>
+              <td>{{ intervention.date }}</td>
+              <td>{{ intervention.userName }}</td>
+              <td>
+                <strong>{{ intervention.title }}</strong>
+
+                @if (intervention.description) {
+                  <small>{{ intervention.description }}</small>
+                }
+              </td>
+              <td>{{ getShiftLabel(intervention.shift) }}</td>
+              <td>{{ getTypeLabel(intervention.type) }}</td>
+              <td>
+                {{ intervention.startTime || '—' }}
+                -
+                {{ intervention.endTime || '—' }}
+              </td>
+              <td>
+                {{ getDurationLabel(intervention.durationMinutes) }}
+              </td>
+              <td>
+                <span
+                  class="yko-status"
+                  [class]="'yko-status--' + intervention.status.toLowerCase()"
+                >
+                  {{ getStatusLabel(intervention.status) }}
+                </span>
+              </td>
+              <td class="yko-intervention-table__actions">
+                @if (canStart(intervention)) {
+                  <button
+                    type="button"
+                    class="yko-button yko-button--start"
+                    (click)="
+                      statusChanged.emit({
+                        id: intervention.id,
+                        status: 'IN_PROGRESS',
+                      })
+                    "
+                  >
+                    Iniciar
+                  </button>
+                }
+
+                @if (canComplete(intervention)) {
+                  <button
+                    type="button"
+                    class="yko-button yko-button--complete"
+                    (click)="
+                      statusChanged.emit({
+                        id: intervention.id,
+                        status: 'COMPLETED',
+                      })
+                    "
+                  >
+                    Completar
+                  </button>
+                }
+
+                @if (canCancel(intervention)) {
+                  <button
+                    type="button"
+                    class="yko-button yko-button--cancel"
+                    (click)="cancelled.emit(intervention.id)"
+                  >
+                    Cancelar
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

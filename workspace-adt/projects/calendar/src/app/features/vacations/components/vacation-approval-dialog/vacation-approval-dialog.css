@@ -1,0 +1,83 @@
+.yko-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(15 23 42 / 50%);
+}
+
+.yko-vacation-approval-dialog {
+  width: min(100%, 34rem);
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1.25rem 2.5rem rgb(15 23 42 / 25%);
+}
+
+.yko-vacation-approval-dialog__header,
+.yko-vacation-approval-dialog__content,
+.yko-vacation-approval-dialog__actions {
+  padding: 1.25rem;
+}
+
+.yko-vacation-approval-dialog__header {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.yko-vacation-approval-dialog__header h2 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 1.125rem;
+}
+
+.yko-vacation-approval-dialog__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.yko-vacation-approval-dialog__content p {
+  margin: 0;
+  color: #475569;
+}
+
+.yko-vacation-approval-dialog__content textarea {
+  min-height: 6rem;
+  padding: 0.65rem;
+  font: inherit;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+  resize: vertical;
+}
+
+.yko-vacation-approval-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.yko-button {
+  padding: 0.6rem 0.9rem;
+  border: 0;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.yko-button--secondary {
+  color: #334155;
+  background: #e2e8f0;
+}
+
+.yko-button--reject {
+  color: #ffffff;
+  background: #dc2626;
+}
+
+.yko-button--approve {
+  color: #ffffff;
+  background: #16a34a;
+}

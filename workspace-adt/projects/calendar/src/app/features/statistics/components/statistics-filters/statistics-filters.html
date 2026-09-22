@@ -1,0 +1,27 @@
+<section class="yko-statistics-filters">
+  <div class="yko-statistics-filters__field">
+    <label for="statistics-year"> Año </label>
+
+    <select id="statistics-year" (change)="onYearChange($event)">
+      @for (item of years; track item) {
+        <option [value]="item" [selected]="item === year()">
+          {{ item }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <div class="yko-statistics-filters__field">
+    <label for="statistics-user"> Usuario </label>
+
+    <select id="statistics-user" [value]="userId()" (change)="onUserChange($event)">
+      <option value="">Todos los usuarios</option>
+
+      @for (user of users(); track user.id) {
+        <option [value]="user.id">
+          {{ user.name }}
+        </option>
+      }
+    </select>
+  </div>
+</section>

@@ -1,0 +1,97 @@
+.yko-intervention-table-section {
+  margin-top: 1.5rem;
+}
+
+.yko-intervention-table-section h2 {
+  color: #1e293b;
+}
+
+.yko-intervention-table-wrapper {
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 0.5rem;
+}
+
+.yko-intervention-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.yko-intervention-table th,
+.yko-intervention-table td {
+  padding: 0.8rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.yko-intervention-table th {
+  color: #475569;
+  background: #f8fafc;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.yko-intervention-table td small {
+  display: block;
+  margin-top: 0.3rem;
+  color: #64748b;
+}
+
+.yko-intervention-table__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  min-width: 13rem;
+}
+
+.yko-status {
+  display: inline-block;
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.yko-status--open {
+  color: #1e40af;
+  background: #dbeafe;
+}
+
+.yko-status--in_progress {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.yko-status--completed {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.yko-status--cancelled {
+  color: #475569;
+  background: #e2e8f0;
+}
+
+.yko-button {
+  padding: 0.4rem 0.65rem;
+  border: 0;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.yko-button--start {
+  color: #1e40af;
+  background: #dbeafe;
+}
+
+.yko-button--complete {
+  color: #ffffff;
+  background: #16a34a;
+}
+
+.yko-button--cancel {
+  color: #991b1b;
+  background: #fee2e2;
+}

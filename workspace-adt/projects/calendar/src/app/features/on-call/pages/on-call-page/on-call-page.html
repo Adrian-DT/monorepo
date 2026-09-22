@@ -1,0 +1,19 @@
+<section class="yko-on-call-page">
+  <header class="yko-on-call-page__header">
+    <h1>Gestión de guardias</h1>
+
+    <p>Asigna guardias por día o mediante periodos de varios días.</p>
+  </header>
+
+  @if (feedbackMessage()) {
+    <p class="yko-feedback-message">
+      {{ feedbackMessage() }}
+    </p>
+  }
+
+  <yko-on-call-assignment-form (onCallAssignmentCreated)="assignmentCreated($event)">
+  </yko-on-call-assignment-form>
+
+  <yko-on-call-assignment-list [assignments]="assignments()" (cancel)="cancelAssignment($event)">
+  </yko-on-call-assignment-list>
+</section>

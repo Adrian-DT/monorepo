@@ -1,0 +1,41 @@
+<!-- <header class="topbar">
+  <h1>Calendario laboral</h1>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <nav>
+      <a routerLink="/calendar" routerLinkActive="active"> Calendario </a>
+
+      <a routerLink="/vacations" routerLinkActive="active"> Vacaciones </a>
+
+      <a routerLink="/on-call" routerLinkActive="active"> Guardias </a>
+
+      <a routerLink="/interventions" routerLinkActive="active"> Intervenciones </a>
+
+      <a routerLink="/statistics" routerLinkActive="active"> Estadísticas </a>
+
+      <a routerLink="/administration" routerLinkActive="active"> Administración </a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div> -->
+
+<div class="yko-shell">
+  <yko-topbar></yko-topbar>
+
+  <div class="yko-shell-body">
+    <yko-sidebar></yko-sidebar>
+
+    <main class="yko-main">
+      <yko-breadcrumb></yko-breadcrumb>
+
+      <section class="yko-page-content">
+        <router-outlet></router-outlet>
+      </section>
+    </main>
+  </div>
+</div>

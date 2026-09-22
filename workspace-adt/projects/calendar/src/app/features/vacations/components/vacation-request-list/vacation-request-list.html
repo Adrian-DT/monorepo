@@ -1,0 +1,35 @@
+<section class="yko-vacation-list">
+  <h2>Mis solicitudes</h2>
+
+  @if (requests().length === 0) {
+    <p>No tienes solicitudes de vacaciones.</p>
+  } @else {
+    <div class="yko-vacation-list__items">
+      @for (request of requests(); track request.id) {
+        <article class="yko-vacation-card">
+          <div>
+            <h3>
+              {{ request.startDate }}
+              -
+              {{ request.endDate }}
+            </h3>
+
+            <p>{{ request.workingDays }} día(s) laborable(s)</p>
+
+            <p>{{ request.reason }}</p>
+          </div>
+
+          <div class="yko-vacation-card__actions">
+            <span class="yko-status" [class]="'yko-status--' + request.status.toLowerCase()">
+              {{ getStatusLabel(request.status) }}
+            </span>
+
+            @if (canCancel(request)) {
+              <button type="button" (click)="cancel.emit(request.id)">Cancelar</button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

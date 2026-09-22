@@ -1,0 +1,66 @@
+.yko-on-call-list {
+  margin-top: 1.5rem;
+}
+
+.yko-on-call-list h2 {
+  color: #1e293b;
+}
+
+.yko-on-call-list__table-wrapper {
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 0.5rem;
+}
+
+.yko-on-call-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.yko-on-call-table th,
+.yko-on-call-table td {
+  padding: 0.8rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.yko-on-call-table th {
+  color: #475569;
+  background: #f8fafc;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.yko-status {
+  display: inline-block;
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.yko-status--planned {
+  color: #1e40af;
+  background: #dbeafe;
+}
+
+.yko-status--confirmed {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.yko-status--cancelled {
+  color: #475569;
+  background: #e2e8f0;
+}
+
+.yko-on-call-table button {
+  padding: 0.4rem 0.65rem;
+  color: #991b1b;
+  background: transparent;
+  border: 1px solid #fca5a5;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}

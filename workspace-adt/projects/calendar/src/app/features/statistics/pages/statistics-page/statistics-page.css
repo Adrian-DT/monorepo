@@ -1,0 +1,42 @@
+.yko-statistics-page {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.yko-statistics-page__header {
+  margin-bottom: 1.5rem;
+}
+
+.yko-statistics-page__header h1 {
+  margin: 0;
+  color: #1e293b;
+}
+
+.yko-statistics-page__header p {
+  margin: 0.5rem 0 0;
+  color: #64748b;
+}
+
+.yko-statistics-page__kpis {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 1200px) {
+  .yko-statistics-page__kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .yko-statistics-page__kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .yko-statistics-page__kpis {
+    grid-template-columns: 1fr;
+  }
+}

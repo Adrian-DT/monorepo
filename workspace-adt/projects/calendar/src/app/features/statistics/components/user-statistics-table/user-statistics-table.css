@@ -1,0 +1,39 @@
+.yko-user-statistics {
+  margin-top: 1.5rem;
+}
+
+.yko-user-statistics h2 {
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+  font-size: 1.125rem;
+}
+
+.yko-user-statistics__table-wrapper {
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 0.5rem;
+}
+
+.yko-user-statistics__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.yko-user-statistics__table th,
+.yko-user-statistics__table td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.yko-user-statistics__table th {
+  color: #475569;
+  background: #f8fafc;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.yko-user-statistics__table td:not(:first-child) {
+  text-align: center;
+}

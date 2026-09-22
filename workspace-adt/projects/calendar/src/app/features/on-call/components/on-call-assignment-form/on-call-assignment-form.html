@@ -1,0 +1,65 @@
+<section class="yko-on-call-form">
+  <h2>Asignar guardia</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <yko-on-call-user-selector
+      [users]="users()"
+      [selectedUserId]="form.controls.userId.value"
+      (userChanged)="changeUser($event)"
+    >
+    </yko-on-call-user-selector>
+
+    @if (hasError('userId', 'required')) {
+      <small class="yko-error"> Debes seleccionar un usuario. </small>
+    }
+
+    <div class="yko-on-call-form__row">
+      <div class="yko-form-field">
+        <label for="onCallStartDate"> Fecha inicial </label>
+
+        <input id="onCallStartDate" type="date" formControlName="startDate" />
+
+        @if (hasError('startDate', 'required')) {
+          <small class="yko-error"> La fecha inicial es obligatoria. </small>
+        }
+      </div>
+
+      <div class="yko-form-field">
+        <label for="onCallEndDate"> Fecha final </label>
+
+        <input id="onCallEndDate" type="date" formControlName="endDate" />
+
+        @if (hasError('endDate', 'required')) {
+          <small class="yko-error"> La fecha final es obligatoria. </small>
+        }
+      </div>
+    </div>
+
+    @if (hasDateRangeError()) {
+      <p class="yko-error">La fecha final no puede ser anterior a la fecha inicial.</p>
+    }
+
+    <p class="yko-on-call-form__hint">
+      La cobertura se calcula automáticamente: días laborables no festivos como guardia Normal y
+      fines de semana o festivos como guardia de 24 horas.
+    </p>
+
+    <div class="yko-form-field">
+      <label for="onCallNotes"> Observaciones </label>
+
+      <textarea id="onCallNotes" rows="3" maxlength="250" formControlName="notes"> </textarea>
+
+      @if (hasError('notes', 'maxlength')) {
+        <small class="yko-error"> Las observaciones no pueden superar 250 caracteres. </small>
+      }
+    </div>
+
+    @if (overlapMessage()) {
+      <p class="yko-error yko-error--overlap">
+        {{ overlapMessage() }}
+      </p>
+    }
+
+    <button type="submit">Guardar guardia</button>
+  </form>
+</section>

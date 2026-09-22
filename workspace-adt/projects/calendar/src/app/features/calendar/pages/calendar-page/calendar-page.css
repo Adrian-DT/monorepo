@@ -1,0 +1,81 @@
+.yko-calendar-page {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.yko-calendar-page__header {
+  margin-bottom: 1.5rem;
+}
+
+.yko-calendar-page__header h1 {
+  margin: 0;
+  color: #1e293b;
+}
+
+.yko-calendar-page__header p {
+  margin: 0.5rem 0 0;
+  color: #64748b;
+}
+
+.yko-calendar-page__content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18rem;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .yko-calendar-page__content {
+    grid-template-columns: 1fr;
+  }
+}
+
+.yko-day-detail {
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 0.5rem;
+}
+
+.yko-day-detail h2 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.yko-day-detail__date {
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.yko-day-detail__events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.yko-day-detail__events li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.yko-day-detail__events li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.yko-day-detail__events span,
+.yko-day-detail__events small {
+  color: #64748b;
+}
+
+@media (max-width: 1100px) {
+  .yko-calendar-page__content {
+    grid-template-columns: 1fr;
+  }
+}

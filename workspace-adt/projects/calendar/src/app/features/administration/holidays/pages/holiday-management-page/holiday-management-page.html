@@ -1,0 +1,143 @@
+<section class="yko-holiday-management-page">
+  <header class="yko-holiday-management-page__header">
+    <h1>Gestión de festivos</h1>
+
+    <p>
+      Configura los festivos nacionales, autonómicos y locales utilizados por el calendario laboral.
+    </p>
+  </header>
+
+  @if (feedbackMessage()) {
+    <p class="yko-feedback-message">
+      {{ feedbackMessage() }}
+    </p>
+  }
+
+  @if (errorMessage()) {
+    <p class="yko-error-message">
+      {{ errorMessage() }}
+    </p>
+  }
+
+  <section class="yko-holiday-form-card">
+    <h2>Añadir festivo</h2>
+
+    <form [formGroup]="form" (ngSubmit)="addHoliday()">
+      <div class="yko-holiday-form__row">
+        <div class="yko-form-field">
+          <label for="holidayDate"> Fecha </label>
+
+          <input id="holidayDate" type="date" formControlName="date" />
+
+          @if (hasError('date', 'required')) {
+            <small class="yko-field-error"> La fecha es obligatoria. </small>
+          }
+        </div>
+
+        <div class="yko-form-field">
+          <label for="holidayName"> Nombre </label>
+
+          <input
+            id="holidayName"
+            type="text"
+            maxlength="120"
+            formControlName="name"
+            placeholder="Ej.: Corpus Christi"
+          />
+
+          @if (hasError('name', 'required')) {
+            <small class="yko-field-error"> El nombre es obligatorio. </small>
+          }
+
+          @if (hasError('name', 'maxlength')) {
+            <small class="yko-field-error"> El nombre no puede superar los 120 caracteres. </small>
+          }
+        </div>
+      </div>
+
+      <div class="yko-holiday-form__row">
+        <div class="yko-form-field">
+          <label for="holidayScope"> Ámbito </label>
+
+          <select id="holidayScope" formControlName="scope">
+            <option value="NATIONAL">Nacional</option>
+
+            <option value="REGIONAL">Autonómico</option>
+
+            <option value="LOCAL">Local</option>
+          </select>
+        </div>
+
+        <div class="yko-form-field">
+          <label for="holidayLocation"> Comunidad o localidad </label>
+
+          <input
+            id="holidayLocation"
+            type="text"
+            maxlength="120"
+            formControlName="location"
+            placeholder="Ej.: Castilla-La Mancha o Toledo"
+          />
+        </div>
+      </div>
+
+      <button type="submit" class="yko-primary-button">Añadir festivo</button>
+    </form>
+  </section>
+
+  <section class="yko-holiday-list">
+    <header class="yko-holiday-list__header">
+      <h2>Festivos configurados</h2>
+
+      <div class="yko-holiday-list__year">
+        <label for="holidayYear"> Año </label>
+
+        <select id="holidayYear" (change)="changeYear($event)">
+          @for (year of years; track year) {
+            <option [value]="year" [selected]="year === selectedYear()">
+              {{ year }}
+            </option>
+          }
+        </select>
+      </div>
+    </header>
+
+    @if (holidays().length === 0) {
+      <p class="yko-empty-message">No hay festivos configurados para {{ selectedYear() }}.</p>
+    } @else {
+      <div class="yko-holiday-list__table-wrapper">
+        <table class="yko-holiday-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Nombre</th>
+              <th>Ámbito</th>
+              <th>Comunidad o localidad</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (holiday of holidays(); track holiday.id) {
+              <tr>
+                <td>{{ holiday.date }}</td>
+                <td>{{ holiday.name }}</td>
+                <td>
+                  {{ getScopeLabel(holiday.scope) }}
+                </td>
+                <td>
+                  {{ holiday.location || '—' }}
+                </td>
+                <td>
+                  <button type="button" class="yko-delete-button" (click)="removeHoliday(holiday)">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</section>

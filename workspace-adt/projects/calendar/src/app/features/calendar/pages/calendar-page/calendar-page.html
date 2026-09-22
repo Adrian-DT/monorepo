@@ -1,0 +1,66 @@
+<section class="yko-calendar-page">
+  <header class="yko-calendar-page__header">
+    <div>
+      <h1>Calendario laboral</h1>
+      <p>Consulta vacaciones, guardias, intervenciones y festivos.</p>
+    </div>
+  </header>
+
+  <yko-calendar-filters
+    [users]="users()"
+    [selectedUserId]="selectedUserId()"
+    [selectedTypes]="selectedTypes()"
+    [availableTypes]="calendarService.eventTypes"
+    (userChanged)="changeUser($event)"
+    (typesChanged)="changeTypes($event)"
+    (clear)="clearFilters()"
+  >
+  </yko-calendar-filters>
+
+  <yko-calendar-legend></yko-calendar-legend>
+
+  <yko-calendar-toolbar
+    [title]="monthTitle()"
+    (previous)="previousMonth()"
+    (today)="goToToday()"
+    (next)="nextMonth()"
+  >
+  </yko-calendar-toolbar>
+
+  <div class="yko-calendar-page__content">
+    <yko-work-calendar [days]="calendarDays()" (daySelected)="selectDay($event)">
+    </yko-work-calendar>
+
+    <aside class="yko-day-detail">
+      <h2>Detalle del día</h2>
+
+      @if (selectedDate(); as date) {
+        <p class="yko-day-detail__date">
+          {{ date }}
+        </p>
+
+        @if (selectedEvents().length > 0) {
+          <ul class="yko-day-detail__events">
+            @for (event of selectedEvents(); track event.id) {
+              <li>
+                <strong>{{ event.title }}</strong>
+
+                @if (event.userName) {
+                  <span>{{ event.userName }}</span>
+                }
+
+                @if (event.description) {
+                  <small>{{ event.description }}</small>
+                }
+              </li>
+            }
+          </ul>
+        } @else {
+          <p>No hay eventos registrados para este día.</p>
+        }
+      } @else {
+        <p>Selecciona un día del calendario.</p>
+      }
+    </aside>
+  </div>
+</section>

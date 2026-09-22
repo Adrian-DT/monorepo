@@ -1,0 +1,17 @@
+<section class="yko-my-vacation-page">
+  <header class="yko-my-vacation-page__header">
+    <h1>Mis vacaciones</h1>
+    <p>Solicita y consulta tus periodos de vacaciones.</p>
+  </header>
+
+  @if (successMessage()) {
+    <p class="yko-success-message">
+      {{ successMessage() }}
+    </p>
+  }
+
+  <yko-vacation-request-form (submitted)="requestCreated($event)"> </yko-vacation-request-form>
+
+  <yko-vacation-request-list [requests]="requests()" (cancel)="cancelRequest($event)">
+  </yko-vacation-request-list>
+</section>

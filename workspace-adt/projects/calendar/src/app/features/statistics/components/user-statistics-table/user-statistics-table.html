@@ -1,0 +1,45 @@
+<section class="yko-user-statistics">
+  <h2>Resumen por usuario</h2>
+
+  @if (statistics().length === 0) {
+    <p>No hay datos para los filtros seleccionados.</p>
+  } @else {
+    <div class="yko-user-statistics__table-wrapper">
+      <table class="yko-user-statistics__table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Guardias total</th>
+            <th>Festivo nacional</th>
+            <th>Festivo autonómico</th>
+            <th>Festivo local</th>
+            <th>Intervenciones</th>
+            <th>Horas intervención</th>
+            <th>Diurnas</th>
+            <th>Tarde</th>
+            <th>Nocturnas</th>
+            <th>Vacaciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (item of statistics(); track item.userId) {
+            <tr>
+              <td>{{ item.userName }}</td>
+              <td>{{ item.onCallDays }}</td>
+              <td>{{ item.nationalHolidayOnCallDays }}</td>
+              <td>{{ item.regionalHolidayOnCallDays }}</td>
+              <td>{{ item.localHolidayOnCallDays }}</td>
+              <td>{{ item.interventionCount }}</td>
+              <td>{{ formatDuration(item.interventionMinutes) }}</td>
+              <td>{{ item.dayInterventions }}</td>
+              <td>{{ item.afternoonInterventions }}</td>
+              <td>{{ item.nightInterventions }}</td>
+              <td>{{ item.vacationDays }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

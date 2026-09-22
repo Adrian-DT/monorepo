@@ -1,0 +1,116 @@
+<section class="yko-intervention-form">
+  <h2>Registrar intervención</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="yko-intervention-form__row">
+      <div class="yko-form-field">
+        <label for="interventionUser"> Usuario asignado </label>
+
+        <select id="interventionUser" formControlName="userId">
+          <option value="">Selecciona un usuario</option>
+
+          @for (user of users(); track user.id) {
+            <option [value]="user.id">
+              {{ user.name }}
+            </option>
+          }
+        </select>
+
+        @if (hasError('userId', 'required')) {
+          <small class="yko-error"> Debes seleccionar un usuario. </small>
+        }
+      </div>
+
+      <div class="yko-form-field">
+        <label for="interventionDate"> Fecha </label>
+
+        <input id="interventionDate" type="date" formControlName="date" />
+
+        @if (hasError('date', 'required')) {
+          <small class="yko-error"> La fecha es obligatoria. </small>
+        }
+      </div>
+    </div>
+
+    <div class="yko-intervention-form__row">
+      <div class="yko-form-field">
+        <label for="interventionShift"> Franja </label>
+
+        <select id="interventionShift" formControlName="shift">
+          <option value="DAY">Diurna</option>
+          <option value="AFTERNOON">Tarde</option>
+          <option value="NIGHT">Nocturna</option>
+        </select>
+      </div>
+
+      <div class="yko-form-field">
+        <label for="interventionType"> Modalidad </label>
+
+        <select id="interventionType" formControlName="type">
+          <option value="REMOTE">Remota</option>
+          <option value="ONSITE">Presencial</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="yko-form-field">
+      <label for="interventionTitle"> Título </label>
+
+      <input
+        id="interventionTitle"
+        type="text"
+        maxlength="120"
+        formControlName="title"
+        placeholder="Ej.: Reinicio de servicios de integración"
+      />
+
+      @if (hasError('title', 'required')) {
+        <small class="yko-error"> El título es obligatorio. </small>
+      }
+
+      @if (hasError('title', 'maxlength')) {
+        <small class="yko-error"> El título no puede superar los 120 caracteres. </small>
+      }
+    </div>
+
+    <div class="yko-form-field">
+      <label for="interventionDescription"> Descripción </label>
+
+      <textarea
+        id="interventionDescription"
+        rows="3"
+        maxlength="500"
+        formControlName="description"
+        placeholder="Descripción opcional de la intervención"
+      >
+      </textarea>
+
+      @if (hasError('description', 'maxlength')) {
+        <small class="yko-error"> La descripción no puede superar los 500 caracteres. </small>
+      }
+    </div>
+
+    <div class="yko-intervention-form__row">
+      <div class="yko-form-field">
+        <label for="interventionStartTime"> Hora de inicio </label>
+
+        <input id="interventionStartTime" type="time" formControlName="startTime" />
+      </div>
+
+      <div class="yko-form-field">
+        <label for="interventionEndTime"> Hora de fin </label>
+
+        <input id="interventionEndTime" type="time" formControlName="endTime" />
+      </div>
+    </div>
+
+    @if (durationPreview() !== undefined) {
+      <p class="yko-duration-preview">
+        Duración estimada:
+        <strong>{{ getDurationLabel() }}</strong>
+      </p>
+    }
+
+    <button type="submit">Registrar intervención</button>
+  </form>
+</section>

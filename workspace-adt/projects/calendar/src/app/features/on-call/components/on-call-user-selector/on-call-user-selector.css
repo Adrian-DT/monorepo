@@ -1,0 +1,12 @@
+.yko-on-call-user-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.yko-on-call-user-selector select {
+  padding: 0.65rem;
+  font: inherit;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+}

@@ -1,0 +1,30 @@
+.yko-statistics-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 0.5rem;
+}
+
+.yko-statistics-filters__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.yko-statistics-filters__field label {
+  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.yko-statistics-filters__field select {
+  min-width: 12rem;
+  padding: 0.6rem;
+  font: inherit;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+}

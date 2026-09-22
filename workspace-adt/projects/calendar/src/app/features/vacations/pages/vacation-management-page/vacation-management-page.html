@@ -1,0 +1,103 @@
+<section class="yko-vacation-management-page">
+  <header class="yko-vacation-management-page__header">
+    <div>
+      <h1>Gestión de vacaciones</h1>
+      <p>Revisa, aprueba o rechaza las solicitudes de vacaciones.</p>
+    </div>
+  </header>
+
+  @if (feedbackMessage()) {
+    <p class="yko-feedback-message">
+      {{ feedbackMessage() }}
+    </p>
+  }
+
+  <section class="yko-management-filters">
+    <div class="yko-filter-field">
+      <label for="userFilter">Empleado</label>
+
+      <select id="userFilter" [value]="selectedUserId()" (change)="changeUser($event)">
+        <option value="">Todos los empleados</option>
+
+        @for (user of users(); track user.id) {
+          <option [value]="user.id">
+            {{ user.name }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="yko-filter-field">
+      <label for="statusFilter">Estado</label>
+
+      <select id="statusFilter" [value]="selectedStatus()" (change)="changeStatus($event)">
+        <option value="">Todos los estados</option>
+        <option value="PENDING">Pendiente</option>
+        <option value="APPROVED">Aprobada</option>
+        <option value="REJECTED">Rechazada</option>
+        <option value="CANCELLED">Cancelada</option>
+      </select>
+    </div>
+
+    <button type="button" class="yko-clear-filters" (click)="clearFilters()">
+      Restablecer filtros
+    </button>
+  </section>
+
+  <section class="yko-request-table-wrapper">
+    <table class="yko-request-table">
+      <thead>
+        <tr>
+          <th>Empleado</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Días</th>
+          <th>Motivo</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (request of requests(); track request.id) {
+          <tr>
+            <td>{{ request.userName }}</td>
+            <td>{{ request.startDate }}</td>
+            <td>{{ request.endDate }}</td>
+            <td>{{ request.workingDays }}</td>
+            <td>{{ request.reason }}</td>
+            <td>
+              <span class="yko-status" [class]="'yko-status--' + request.status.toLowerCase()">
+                {{ getStatusLabel(request.status) }}
+              </span>
+            </td>
+            <td>
+              @if (request.status === 'PENDING') {
+                <button type="button" class="yko-review-button" (click)="reviewRequest(request)">
+                  Revisar
+                </button>
+              } @else {
+                <span class="yko-no-action">—</span>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="yko-empty-row">
+              No hay solicitudes para los filtros seleccionados.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+  @if (selectedRequest(); as request) {
+    <yko-vacation-approval-dialog
+      [request]="request"
+      (confirmed)="confirmDecision($event)"
+      (cancelled)="closeDialog()"
+    >
+    </yko-vacation-approval-dialog>
+  }
+</section>

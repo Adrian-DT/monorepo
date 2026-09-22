@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+.yko-kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-height: 8rem;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-left: 0.35rem solid #2563eb;
+  border-radius: 0.5rem;
+}
+
+.yko-kpi-card__label {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.yko-kpi-card__value {
+  color: #1e293b;
+  font-size: 1.75rem;
+}
+
+.yko-kpi-card__description {
+  color: #64748b;
+}
+
+.yko-kpi-card--blue {
+  border-left-color: #2563eb;
+}
+
+.yko-kpi-card--green {
+  border-left-color: #16a34a;
+}
+
+.yko-kpi-card--orange {
+  border-left-color: #ea580c;
+}
+
+.yko-kpi-card--purple {
+  border-left-color: #7c3aed;
+}
+
+.yko-kpi-card--red {
+  border-left-color: #dc2626;
+}

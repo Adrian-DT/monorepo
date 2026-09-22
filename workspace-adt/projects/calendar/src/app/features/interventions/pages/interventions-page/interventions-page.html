@@ -1,0 +1,21 @@
+<section class="yko-interventions-page">
+  <header class="yko-interventions-page__header">
+    <h1>Intervenciones</h1>
+    <p>Registra y gestiona intervenciones diurnas, de tarde y nocturnas.</p>
+  </header>
+
+  @if (feedbackMessage()) {
+    <p class="yko-feedback-message">
+      {{ feedbackMessage() }}
+    </p>
+  }
+
+  <yko-intervention-form (created)="interventionCreated($event)"> </yko-intervention-form>
+
+  <yko-intervention-table
+    [interventions]="interventions()"
+    (statusChanged)="changeStatus($event)"
+    (cancelled)="cancelIntervention($event)"
+  >
+  </yko-intervention-table>
+</section>

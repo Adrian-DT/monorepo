@@ -1,0 +1,47 @@
+<section class="yko-vacation-form">
+  <h2>Solicitar vacaciones</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="yko-vacation-form__row">
+      <div class="yko-form-field">
+        <label for="startDate"> Fecha inicial </label>
+
+        <input id="startDate" type="date" formControlName="startDate" />
+
+        @if (hasError('startDate', 'required')) {
+          <small class="yko-error"> La fecha inicial es obligatoria. </small>
+        }
+      </div>
+
+      <div class="yko-form-field">
+        <label for="endDate"> Fecha final </label>
+
+        <input id="endDate" type="date" formControlName="endDate" />
+
+        @if (hasError('endDate', 'required')) {
+          <small class="yko-error"> La fecha final es obligatoria. </small>
+        }
+      </div>
+    </div>
+
+    @if (hasDateRangeError()) {
+      <p class="yko-error">La fecha final no puede ser anterior a la fecha inicial.</p>
+    }
+
+    <div class="yko-form-field">
+      <label for="reason"> Motivo </label>
+
+      <textarea id="reason" rows="3" formControlName="reason" maxlength="250"> </textarea>
+
+      @if (hasError('reason', 'required')) {
+        <small class="yko-error"> El motivo es obligatorio. </small>
+      }
+
+      @if (hasError('reason', 'maxlength')) {
+        <small class="yko-error"> El motivo no puede superar los 250 caracteres. </small>
+      }
+    </div>
+
+    <button type="submit" [disabled]="form.invalid">Enviar solicitud</button>
+  </form>
+</section>
