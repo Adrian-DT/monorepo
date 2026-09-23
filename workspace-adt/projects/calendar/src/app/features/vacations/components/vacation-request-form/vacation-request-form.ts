@@ -11,6 +11,7 @@ import {
 import { VacationRequest } from '../../models/vacation-request.model';
 import { VacationsService } from '../../services/vacations';
 import { HolidaysService } from '../../../administration/holidays/services/holidays.service';
+import { AuthService } from '../../../../core/auth/auth';
 
 @Component({
   selector: 'yko-vacation-request-form',
@@ -23,6 +24,7 @@ export class VacationRequestForm {
   private readonly formBuilder = inject(FormBuilder);
   private readonly vacationsService = inject(VacationsService);
   private readonly holidaysService = inject(HolidaysService);
+  private readonly authService = inject(AuthService);
 
   readonly submitted = output<VacationRequest>();
 
@@ -38,6 +40,12 @@ export class VacationRequestForm {
   );
 
   submit(): void {
+    const currentUser = this.authService.currentUser();
+
+    if (!currentUser) {
+      return;
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -46,8 +54,8 @@ export class VacationRequestForm {
     const formValue = this.form.getRawValue();
 
     const request = this.vacationsService.createRequest({
-      userId: '1',
-      userName: 'Adrián Delgado',
+      userId: currentUser.id,
+      userName: currentUser.displayName,
       startDate: formValue.startDate,
       endDate: formValue.endDate,
       workingDays: this.calculateWorkingDays(formValue.startDate, formValue.endDate),

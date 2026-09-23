@@ -4,6 +4,7 @@ import { VacationRequestForm } from '../../components/vacation-request-form/vaca
 import { VacationRequestList } from '../../components/vacation-request-list/vacation-request-list';
 import { VacationRequest } from '../../models/vacation-request.model';
 import { VacationsService } from '../../services/vacations';
+import { AuthService } from '../../../../core/auth/auth';
 
 @Component({
   selector: 'yko-my-vacation-page',
@@ -14,10 +15,15 @@ import { VacationsService } from '../../services/vacations';
 })
 export class MyVacationPage {
   private readonly vacationsService = inject(VacationsService);
+  private readonly authService = inject(AuthService);
 
-  readonly userId = '1';
+  readonly currentUser = this.authService.currentUser;
 
-  readonly requests = computed(() => this.vacationsService.getRequestsByUser(this.userId));
+  readonly requests = computed(() => {
+    const userId = this.currentUser()?.id;
+
+    return userId ? this.vacationsService.getRequestsByUser(userId) : [];
+  });
 
   readonly successMessage = signal('');
 

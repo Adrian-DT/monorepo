@@ -1,5 +1,12 @@
 <div class="yko-user-menu">
-  <span>Administrador</span>
+  @if (currentUser(); as user) {
+    <div class="yko-user-menu__identity">
+      <strong>{{ user.displayName }}</strong>
+      <small>
+        {{ user.role === 'ADMIN' ? 'Administrador' : 'Usuario' }}
+      </small>
+    </div>
+  }
 
   <button type="button" (click)="logout()">Cerrar sesión</button>
 </div>
