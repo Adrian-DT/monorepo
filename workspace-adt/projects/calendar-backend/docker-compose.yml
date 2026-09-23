@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: yko-calendar-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: calendar
+      POSTGRES_USER: calendar
+      POSTGRES_PASSWORD: calendar_dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - calendar_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  calendar_postgres_data:
