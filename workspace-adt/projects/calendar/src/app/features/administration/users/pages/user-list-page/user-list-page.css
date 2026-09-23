@@ -1,3 +1,14 @@
-:host {
-  display: block;
+.yko-user-form-container {
+  max-width: 40rem;
+  margin-top: 1.5rem;
+}
+
+.yko-primary-button {
+  margin-bottom: 1rem;
+  padding: 0.65rem 1rem;
+  color: #ffffff;
+  background: #2563eb;
+  border: 0;
+  border-radius: 0.25rem;
+  cursor: pointer;
 }

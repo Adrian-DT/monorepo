@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { OnCallService } from '../../on-call/services/on-call.service';
-import { VacationsService } from '../../vacations/services/vacations';
+import { VacationsService } from '../../vacations/services/vacations.service';
 import { CalendarEvent, CalendarEventType } from '../models/calendar-event-model';
 import { InterventionsService } from '../../interventions/services/interventions.service';
 import { HolidaysService } from '../../administration/holidays/services/holidays.service';

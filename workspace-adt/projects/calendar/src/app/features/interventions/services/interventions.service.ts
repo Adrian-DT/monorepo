@@ -1,6 +1,8 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { Intervention, InterventionStatus } from '../models/intervention.model';
+
+import { UserService } from '../../administration/users/services/user.service';
 
 export interface InterventionUser {
   id: string;
@@ -11,6 +13,7 @@ export interface InterventionUser {
   providedIn: 'root',
 })
 export class InterventionsService {
+  private readonly userService = inject(UserService);
   private readonly interventionsState = signal<Intervention[]>([
     {
       id: 'intervention-1',
@@ -45,7 +48,7 @@ export class InterventionsService {
   ]);
 
   readonly interventions = this.interventionsState.asReadonly();
-  readonly users = this.usersState.asReadonly();
+  readonly users = computed(() => this.userService.activeUsers());
 
   readonly activeInterventions = computed(() =>
     this.interventionsState().filter((intervention) => intervention.status !== 'CANCELLED'),

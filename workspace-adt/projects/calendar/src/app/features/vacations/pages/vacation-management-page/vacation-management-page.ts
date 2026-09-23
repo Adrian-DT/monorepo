@@ -5,7 +5,7 @@ import {
   VacationApprovalPayload,
 } from '../../components/vacation-approval-dialog/vacation-approval-dialog';
 import { VacationRequest, VacationRequestStatus } from '../../models/vacation-request.model';
-import { VacationsService } from '../../services/vacations';
+import { VacationsService } from '../../services/vacations.service';
 
 @Component({
   selector: 'yko-vacation-management-page',

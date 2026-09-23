@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 
 import { VacationRequest } from '../../models/vacation-request.model';
-import { VacationsService } from '../../services/vacations';
+import { VacationsService } from '../../services/vacations.service';
 import { HolidaysService } from '../../../administration/holidays/services/holidays.service';
 import { AuthService } from '../../../../core/auth/auth';
 

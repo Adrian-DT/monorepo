@@ -89,6 +89,14 @@ export const routes: Routes = [
             (component) => component.HolidayManagementPage,
           ),
       },
+      {
+        path: 'administration/users',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./features/administration/users/pages/user-list-page/user-list-page').then(
+            (component) => component.UserListPage,
+          ),
+      },
     ],
   },
   {

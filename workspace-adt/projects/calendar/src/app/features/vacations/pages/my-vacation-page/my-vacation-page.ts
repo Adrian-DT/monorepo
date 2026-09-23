@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { VacationRequestForm } from '../../components/vacation-request-form/vacation-request-form';
 import { VacationRequestList } from '../../components/vacation-request-list/vacation-request-list';
 import { VacationRequest } from '../../models/vacation-request.model';
-import { VacationsService } from '../../services/vacations';
+import { VacationsService } from '../../services/vacations.service';
 import { AuthService } from '../../../../core/auth/auth';
 
 @Component({

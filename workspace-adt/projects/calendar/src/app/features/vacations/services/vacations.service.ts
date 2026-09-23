@@ -1,11 +1,14 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal, inject } from '@angular/core';
 
 import { VacationRequest, VacationRequestStatus } from '../models/vacation-request.model';
+
+import { UserService } from '../../administration/users/services/user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VacationsService {
+  private readonly userService = inject(UserService);
   private readonly requestsState = signal<VacationRequest[]>([
     {
       id: 'vacation-request-1',
@@ -44,18 +47,12 @@ export class VacationsService {
 
   readonly requests = this.requestsState.asReadonly();
 
-  readonly users = computed(() => {
-    const userMap = new Map<string, string>();
-
-    for (const request of this.requestsState()) {
-      userMap.set(request.userId, request.userName);
-    }
-
-    return Array.from(userMap, ([id, name]) => ({
-      id,
-      name,
-    }));
-  });
+  readonly users = computed(() =>
+    this.userService.activeUsers().map((user) => ({
+      id: user.id,
+      name: user.displayName,
+    })),
+  );
 
   getRequestsByUser(userId: string): VacationRequest[] {
     return this.requestsState().filter((request) => request.userId === userId);

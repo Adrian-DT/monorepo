@@ -2,7 +2,7 @@ import { Injectable, computed, inject } from '@angular/core';
 
 import { InterventionsService } from '../../interventions/services/interventions.service';
 import { OnCallService } from '../../on-call/services/on-call.service';
-import { VacationsService } from '../../vacations/services/vacations';
+import { VacationsService } from '../../vacations/services/vacations.service';
 import { GeneralStatistics, StatisticsUser, UserStatistics } from '../models/statistics.model';
 import { HolidaysService } from '../../administration/holidays/services/holidays.service';
 
@@ -23,7 +23,7 @@ export class StatisticsService {
     }
 
     for (const user of this.interventionsService.users()) {
-      users.set(user.id, user.name);
+      users.set(user.id, user.displayName);
     }
 
     for (const user of this.vacationsService.users()) {

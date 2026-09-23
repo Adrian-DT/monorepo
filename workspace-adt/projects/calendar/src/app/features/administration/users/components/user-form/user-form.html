@@ -1,0 +1,81 @@
+<section class="yko-user-form">
+  <header class="yko-user-form__header">
+    <h2>
+      {{ editing ? 'Editar usuario' : 'Crear usuario' }}
+    </h2>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="yko-user-form__field">
+      <label for="userUsername"> Nombre de usuario </label>
+
+      <input id="userUsername" type="text" formControlName="username" autocomplete="off" />
+
+      @if (hasError('username', 'required')) {
+        <small class="yko-error"> El nombre de usuario es obligatorio. </small>
+      }
+
+      @if (hasError('username', 'minlength')) {
+        <small class="yko-error"> Debe tener al menos 3 caracteres. </small>
+      }
+
+      @if (hasError('username', 'pattern')) {
+        <small class="yko-error">
+          Solo se permiten letras, números, punto, guion y guion bajo.
+        </small>
+      }
+
+      @if (hasError('username', 'duplicate')) {
+        <small class="yko-error"> Ya existe un usuario con ese nombre. </small>
+      }
+    </div>
+
+    <div class="yko-user-form__field">
+      <label for="userDisplayName"> Nombre completo </label>
+
+      <input id="userDisplayName" type="text" formControlName="displayName" />
+
+      @if (hasError('displayName', 'required')) {
+        <small class="yko-error"> El nombre completo es obligatorio. </small>
+      }
+    </div>
+
+    <div class="yko-user-form__field">
+      <label for="userEmail"> Correo electrónico </label>
+
+      <input id="userEmail" type="email" formControlName="email" />
+
+      @if (hasError('email', 'required')) {
+        <small class="yko-error"> El correo es obligatorio. </small>
+      }
+
+      @if (hasError('email', 'email')) {
+        <small class="yko-error"> Introduce un correo válido. </small>
+      }
+
+      @if (hasError('email', 'duplicate')) {
+        <small class="yko-error"> Ya existe un usuario con ese correo. </small>
+      }
+    </div>
+
+    <div class="yko-user-form__field">
+      <label for="userRole"> Rol </label>
+
+      <select id="userRole" formControlName="role">
+        <option value="USER">Usuario</option>
+
+        <option value="ADMIN">Administrador</option>
+      </select>
+    </div>
+
+    <footer class="yko-user-form__actions">
+      <button type="button" class="yko-secondary-button" (click)="cancelled.emit()">
+        Cancelar
+      </button>
+
+      <button type="submit" class="yko-primary-button">
+        {{ editing ? 'Guardar cambios' : 'Crear usuario' }}
+      </button>
+    </footer>
+  </form>
+</section>

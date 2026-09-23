@@ -58,7 +58,7 @@ export class InterventionForm {
 
     const intervention = this.interventionsService.createIntervention({
       userId: user.id,
-      userName: user.name,
+      userName: user.username,
       date: value.date,
       shift: value.shift,
       type: value.type,

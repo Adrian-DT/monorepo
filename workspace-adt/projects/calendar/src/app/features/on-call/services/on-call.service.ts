@@ -3,10 +3,10 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { HolidaysService } from '../../administration/holidays/services/holidays.service';
 import {
   OnCallAssignment,
-  OnCallAssignmentStatus,
   OnCallCoverageDay,
   OnCallDayType,
 } from '../models/on-call-assignment.model';
+import { UserService } from '../../administration/users/services/user.service';
 
 export interface OnCallUser {
   id: string;
@@ -23,7 +23,7 @@ export interface OnCallOverlap {
 })
 export class OnCallService {
   private readonly holidaysService = inject(HolidaysService);
-
+  private readonly userService = inject(UserService);
   private readonly assignmentsState = signal<OnCallAssignment[]>([
     {
       id: 'on-call-1',
@@ -37,23 +37,13 @@ export class OnCallService {
     },
   ]);
 
-  private readonly usersState = signal<OnCallUser[]>([
-    {
-      id: '1',
-      name: 'Adrián Delgado',
-    },
-    {
-      id: '2',
-      name: 'María García',
-    },
-    {
-      id: '3',
-      name: 'Carlos Martín',
-    },
-  ]);
-
   readonly assignments = this.assignmentsState.asReadonly();
-  readonly users = this.usersState.asReadonly();
+  readonly users = computed<OnCallUser[]>(() =>
+    this.userService.activeUsers().map((user) => ({
+      id: user.id,
+      name: user.displayName,
+    })),
+  );
 
   readonly activeAssignments = computed(() =>
     this.assignmentsState().filter((assignment) => assignment.status !== 'CANCELLED'),

@@ -1,0 +1,79 @@
+<section class="yko-user-list-page">
+  <header class="yko-user-list-page__header">
+    <h1>Usuarios</h1>
+    <p>Gestiona usuarios activos, roles y acceso a la aplicación.</p>
+  </header>
+  <button type="button" class="yko-primary-button" (click)="createUser()">Nuevo usuario</button>
+  @if (feedbackMessage()) {
+    <p class="yko-feedback-message">
+      {{ feedbackMessage() }}
+    </p>
+  }
+
+  @if (errorMessage()) {
+    <p class="yko-error-message">
+      {{ errorMessage() }}
+    </p>
+  }
+
+  <div class="yko-user-list__table-wrapper">
+    <table class="yko-user-list__table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Usuario</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (user of users(); track user.id) {
+          <tr>
+            <td>{{ user.displayName }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <select [value]="user.role" (change)="changeRole(user, $event)">
+                <option value="USER">Usuario</option>
+
+                <option value="ADMIN">Administrador</option>
+              </select>
+            </td>
+            <td>
+              <span
+                class="yko-status"
+                [class.yko-status--active]="user.active"
+                [class.yko-status--inactive]="!user.active"
+              >
+                {{ user.active ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td>
+              <button type="button" (click)="editUser(user)">Editar</button>
+
+              <button type="button" (click)="toggleActive(user)">
+                {{ user.active ? 'Desactivar' : 'Activar' }}
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+@if (creatingUser()) {
+  <div class="yko-user-form-container">
+    <yko-user-form [user]="null" (saved)="userSaved($event)" (cancelled)="closeEditor()">
+    </yko-user-form>
+  </div>
+}
+
+@if (!creatingUser() && selectedUser(); as user) {
+  <div class="yko-user-form-container">
+    <yko-user-form [user]="user" (saved)="userSaved($event)" (cancelled)="closeEditor()">
+    </yko-user-form>
+  </div>
+}

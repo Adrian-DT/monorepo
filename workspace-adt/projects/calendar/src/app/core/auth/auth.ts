@@ -1,16 +1,14 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
-import { User, UserRole } from './user.model';
-
-interface LoginCredentials {
-  username: string;
-  password: string;
-}
+import { UserService } from '../../features/administration/users/services/user.service';
+import { User } from './user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private readonly userService = inject(UserService);
+
   private readonly currentUserState = signal<User | null>(this.loadStoredUser());
 
   readonly currentUser = this.currentUserState.asReadonly();
@@ -20,12 +18,11 @@ export class AuthService {
   readonly isAdmin = computed(() => this.currentUserState()?.role === 'ADMIN');
 
   login(username: string, password: string): boolean {
-    const user = this.findUser({
-      username: username.trim(),
-      password,
-    });
+    const user = this.userService.getByUsername(username.trim());
 
-    if (!user) {
+    const validPassword = password === user?.username;
+
+    if (!user || !validPassword || !user.active) {
       this.currentUserState.set(null);
       sessionStorage.removeItem('yko-user');
 
@@ -33,6 +30,7 @@ export class AuthService {
     }
 
     this.currentUserState.set(user);
+
     sessionStorage.setItem('yko-user', JSON.stringify(user));
 
     return true;
@@ -43,58 +41,8 @@ export class AuthService {
     sessionStorage.removeItem('yko-user');
   }
 
-  hasRole(role: UserRole): boolean {
+  hasRole(role: 'USER' | 'ADMIN'): boolean {
     return this.currentUserState()?.role === role;
-  }
-
-  private findUser(credentials: LoginCredentials): User | null {
-    const users: Array<LoginCredentials & { user: User }> = [
-      {
-        username: 'admin',
-        password: 'admin',
-        user: {
-          id: '1',
-          username: 'admin',
-          displayName: 'Adrián Delgado',
-          email: 'admin@example.com',
-          role: 'ADMIN',
-          active: true,
-        },
-      },
-      {
-        username: 'maria',
-        password: 'maria',
-        user: {
-          id: '2',
-          username: 'maria',
-          displayName: 'María García',
-          email: 'maria@example.com',
-          role: 'USER',
-          active: true,
-        },
-      },
-      {
-        username: 'carlos',
-        password: 'carlos',
-        user: {
-          id: '3',
-          username: 'carlos',
-          displayName: 'Carlos Martín',
-          email: 'carlos@example.com',
-          role: 'USER',
-          active: true,
-        },
-      },
-    ];
-
-    const match = users.find(
-      (item) =>
-        item.username === credentials.username &&
-        item.password === credentials.password &&
-        item.user.active,
-    );
-
-    return match?.user ?? null;
   }
 
   private loadStoredUser(): User | null {
@@ -105,7 +53,11 @@ export class AuthService {
     }
 
     try {
-      return JSON.parse(storedUser) as User;
+      const user = JSON.parse(storedUser) as User;
+
+      const currentUser = this.userService.getById(user.id);
+
+      return currentUser?.active ? currentUser : null;
     } catch {
       sessionStorage.removeItem('yko-user');
       return null;
