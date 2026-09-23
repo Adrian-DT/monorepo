@@ -7,6 +7,7 @@ import { User } from './user.model';
   providedIn: 'root',
 })
 export class AuthService {
+  readonly accessToken = signal<string | null>(sessionStorage.getItem('yko-access-token'));
   private readonly userService = inject(UserService);
 
   private readonly currentUserState = signal<User | null>(this.loadStoredUser());
@@ -33,12 +34,21 @@ export class AuthService {
 
     sessionStorage.setItem('yko-user', JSON.stringify(user));
 
+    const temporaryToken = `dev-token-${user.id}`;
+
+    this.accessToken.set(temporaryToken);
+
+    sessionStorage.setItem('yko-access-token', temporaryToken);
+
     return true;
   }
 
   logout(): void {
     this.currentUserState.set(null);
     sessionStorage.removeItem('yko-user');
+
+    this.accessToken.set(null);
+    sessionStorage.removeItem('yko-access-token');
   }
 
   hasRole(role: 'USER' | 'ADMIN'): boolean {

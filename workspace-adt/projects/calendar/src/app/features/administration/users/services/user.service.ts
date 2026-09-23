@@ -1,11 +1,16 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal, inject } from '@angular/core';
 
 import { User, UserRole } from '../../../../core/auth/user.model';
+
+import { Observable } from 'rxjs';
+
+import { ApiService } from '../../../../core/http/api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  private readonly apiService = inject(ApiService);
   private readonly usersState = signal<User[]>([
     {
       id: '1',
@@ -40,6 +45,22 @@ export class UserService {
   readonly administrators = computed(() =>
     this.usersState().filter((user) => user.role === 'ADMIN' && user.active),
   );
+
+  loadFromApi(): Observable<User[]> {
+    return this.apiService.get<User[]>('users');
+  }
+
+  createInApi(user: Omit<User, 'id'>): Observable<User> {
+    return this.apiService.post<User>('users', user);
+  }
+
+  updateInApi(userId: string, changes: Partial<Omit<User, 'id'>>): Observable<User> {
+    return this.apiService.put<User>(`users/${userId}`, changes);
+  }
+
+  deleteFromApi(userId: string): Observable<void> {
+    return this.apiService.delete<void>(`users/${userId}`);
+  }
 
   getById(userId: string): User | undefined {
     return this.usersState().find((user) => user.id === userId);
