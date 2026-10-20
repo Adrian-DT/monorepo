@@ -42,6 +42,12 @@
       }
     </div>
 
-    <button type="submit" [disabled]="form.invalid">Enviar solicitud</button>
+    @if (errorMessage()) {
+      <p class="yko-error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="form.invalid || saving()">
+      {{ saving() ? 'Enviando...' : 'Enviar solicitud' }}
+    </button>
   </form>
 </section>

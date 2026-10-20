@@ -12,6 +12,12 @@
     </p>
   }
 
+  @if (errorMessage()) {
+    <p class="yko-error-message">
+      {{ errorMessage() }}
+    </p>
+  }
+
   <section class="yko-management-filters">
     <div class="yko-filter-field">
       <label for="userFilter">Empleado</label>
@@ -95,6 +101,8 @@
   @if (selectedRequest(); as request) {
     <yko-vacation-approval-dialog
       [request]="request"
+      [saving]="saving()"
+      [errorMessage]="dialogError()"
       (confirmed)="confirmDecision($event)"
       (cancelled)="closeDialog()"
     >

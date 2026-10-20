@@ -37,7 +37,7 @@
               <td>{{ assignment.notes || '—' }}</td>
               <td>
                 @if (canCancel(assignment)) {
-                  <button type="button" (click)="cancel.emit(assignment.id)">Cancelar</button>
+                  <button type="button" (click)="cancelRequested.emit(assignment.id)">Cancelar</button>
                 } @else {
                   <span>—</span>
                 }

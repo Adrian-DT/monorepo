@@ -6,6 +6,7 @@ import { LoginRequest, LoginResponse } from '../../features/auth/models/login.mo
 import { UserService } from '../../features/administration/users/services/user.service';
 import { ApiService } from '../http/api.service';
 import { HolidaysService } from '../../features/administration/holidays/services/holidays.service';
+import { VacationsService } from '../../features/vacations/services/vacations.service';
 import { User } from './user.model';
 
 const TOKEN_KEY = 'yko-access-token';
@@ -18,6 +19,7 @@ export class AuthService {
   private readonly apiService = inject(ApiService);
   private readonly userService = inject(UserService);
   private readonly holidaysService = inject(HolidaysService);
+  private readonly vacationsService = inject(VacationsService);
 
   readonly accessToken = signal<string | null>(sessionStorage.getItem(TOKEN_KEY));
 
@@ -87,6 +89,7 @@ export class AuthService {
 
     this.userService.load(user.role === 'ADMIN');
     this.holidaysService.load();
+    this.vacationsService.load();
   }
 
   private clearSession(): void {
@@ -98,6 +101,7 @@ export class AuthService {
 
     this.userService.clear();
     this.holidaysService.clear();
+    this.vacationsService.clear();
   }
 
   private loadStoredUser(): User | null {

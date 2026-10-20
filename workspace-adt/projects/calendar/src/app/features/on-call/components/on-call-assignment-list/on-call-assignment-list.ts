@@ -17,7 +17,7 @@ export class OnCallAssignmentList {
   private readonly onCallService = inject(OnCallService);
 
   readonly assignments = input.required<OnCallAssignment[]>();
-  readonly cancel = output<string>();
+  readonly cancelRequested = output<string>();
 
   readonly coverageDays = this.onCallService.coverageDays;
 

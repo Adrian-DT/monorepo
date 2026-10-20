@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 
 import {
   AbstractControl,
@@ -8,10 +8,9 @@ import {
   Validators,
 } from '@angular/forms';
 
+import { toApiError } from '../../../../core/http/api-error';
 import { VacationRequest } from '../../models/vacation-request.model';
 import { VacationsService } from '../../services/vacations.service';
-import { HolidaysService } from '../../../administration/holidays/services/holidays.service';
-import { AuthService } from '../../../../core/auth/auth';
 
 @Component({
   selector: 'yko-vacation-request-form',
@@ -23,10 +22,11 @@ import { AuthService } from '../../../../core/auth/auth';
 export class VacationRequestForm {
   private readonly formBuilder = inject(FormBuilder);
   private readonly vacationsService = inject(VacationsService);
-  private readonly holidaysService = inject(HolidaysService);
-  private readonly authService = inject(AuthService);
 
   readonly submitted = output<VacationRequest>();
+
+  readonly saving = signal(false);
+  readonly errorMessage = signal('');
 
   readonly form = this.formBuilder.nonNullable.group(
     {
@@ -40,9 +40,7 @@ export class VacationRequestForm {
   );
 
   submit(): void {
-    const currentUser = this.authService.currentUser();
-
-    if (!currentUser) {
+    if (this.saving()) {
       return;
     }
 
@@ -53,18 +51,26 @@ export class VacationRequestForm {
 
     const formValue = this.form.getRawValue();
 
-    const request = this.vacationsService.createRequest({
-      userId: currentUser.id,
-      userName: currentUser.displayName,
-      startDate: formValue.startDate,
-      endDate: formValue.endDate,
-      workingDays: this.calculateWorkingDays(formValue.startDate, formValue.endDate),
-      reason: formValue.reason,
-    });
+    this.saving.set(true);
+    this.errorMessage.set('');
 
-    this.form.reset();
-
-    this.submitted.emit(request);
+    this.vacationsService
+      .create({
+        startDate: formValue.startDate,
+        endDate: formValue.endDate,
+        reason: formValue.reason.trim(),
+      })
+      .subscribe({
+        next: (request) => {
+          this.saving.set(false);
+          this.form.reset();
+          this.submitted.emit(request);
+        },
+        error: (error: unknown) => {
+          this.saving.set(false);
+          this.errorMessage.set(this.describeError(error));
+        },
+      });
   }
 
   hasError(controlName: string, errorName: string): boolean {
@@ -77,6 +83,24 @@ export class VacationRequestForm {
     return Boolean(this.form.touched && this.form.hasError('invalidDateRange'));
   }
 
+  private describeError(error: unknown): string {
+    const apiError = toApiError(error);
+
+    if (apiError.code === 'OVERLAP') {
+      return 'Ya tienes una solicitud pendiente o aprobada que incluye alguna de esas fechas.';
+    }
+
+    if (apiError.code === 'NO_WORKING_DAYS') {
+      return 'El periodo seleccionado no incluye ningún día laborable.';
+    }
+
+    if (apiError.status === 400) {
+      return 'Los datos de la solicitud no son válidos.';
+    }
+
+    return 'No se pudo enviar la solicitud. Inténtalo de nuevo.';
+  }
+
   private dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const startDate = control.get('startDate')?.value;
     const endDate = control.get('endDate')?.value;
@@ -86,44 +110,5 @@ export class VacationRequestForm {
     }
 
     return endDate >= startDate ? null : { invalidDateRange: true };
-  }
-
-  private calculateWorkingDays(startDate: string, endDate: string): number {
-    const start = this.parseDate(startDate);
-    const end = this.parseDate(endDate);
-
-    let workingDays = 0;
-    const current = new Date(start);
-
-    while (current <= end) {
-      const dayOfWeek = current.getDay();
-      const isoDate = this.toIsoDate(current);
-
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-
-      const isHoliday = this.holidaysService.isHoliday(isoDate);
-
-      if (!isWeekend && !isHoliday) {
-        workingDays++;
-      }
-
-      current.setDate(current.getDate() + 1);
-    }
-
-    return workingDays;
-  }
-
-  private parseDate(value: string): Date {
-    const [year, month, day] = value.split('-').map(Number);
-
-    return new Date(year, month - 1, day);
-  }
-
-  private toIsoDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
   }
 }

@@ -40,6 +40,14 @@
         placeholder="Comentario opcional"
       >
       </textarea>
+
+      <p class="yko-vacation-approval-dialog__note">
+        Al aprobar, los días laborables se recalculan con el calendario de festivos vigente.
+      </p>
+
+      @if (errorMessage()) {
+        <p class="yko-vacation-approval-dialog__error">{{ errorMessage() }}</p>
+      }
     </div>
 
     <footer class="yko-vacation-approval-dialog__actions">
@@ -47,11 +55,21 @@
         Cancelar
       </button>
 
-      <button type="button" class="yko-button yko-button--reject" (click)="reject()">
+      <button
+        type="button"
+        class="yko-button yko-button--reject"
+        [disabled]="saving()"
+        (click)="reject()"
+      >
         Rechazar
       </button>
 
-      <button type="button" class="yko-button yko-button--approve" (click)="approve()">
+      <button
+        type="button"
+        class="yko-button yko-button--approve"
+        [disabled]="saving()"
+        (click)="approve()"
+      >
         Aprobar
       </button>
     </footer>

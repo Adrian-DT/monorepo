@@ -21,6 +21,8 @@ export interface VacationApprovalPayload {
 })
 export class VacationApprovalDialog {
   readonly request = input.required<VacationRequest>();
+  readonly saving = input(false);
+  readonly errorMessage = input('');
 
   readonly confirmed = output<VacationApprovalPayload>();
   readonly cancelled = output<void>();

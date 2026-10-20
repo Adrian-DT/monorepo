@@ -1,49 +1,32 @@
-import { Injectable, computed, signal, inject } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
+import { Observable, map, tap } from 'rxjs';
+
+import { ApiService } from '../../../core/http/api.service';
+import { UserService } from '../../administration/users/services/user.service';
 import { VacationRequest, VacationRequestStatus } from '../models/vacation-request.model';
 
-import { UserService } from '../../administration/users/services/user.service';
+export type VacationDecision = 'APPROVED' | 'REJECTED';
+
+export interface VacationCreateRequest {
+  startDate: string;
+  endDate: string;
+  reason: string;
+}
+
+interface VacationDto extends Omit<VacationRequest, 'reason' | 'adminComment'> {
+  reason?: string | null;
+  adminComment?: string | null;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class VacationsService {
+  private readonly apiService = inject(ApiService);
   private readonly userService = inject(UserService);
-  private readonly requestsState = signal<VacationRequest[]>([
-    {
-      id: 'vacation-request-1',
-      userId: '1',
-      userName: 'Adrián Delgado',
-      startDate: '2026-09-14',
-      endDate: '2026-09-15',
-      workingDays: 2,
-      status: 'APPROVED',
-      reason: 'Asuntos personales',
-      createdAt: '2026-08-20T10:00:00',
-    },
-    {
-      id: 'vacation-request-2',
-      userId: '2',
-      userName: 'María García',
-      startDate: '2026-09-28',
-      endDate: '2026-10-02',
-      workingDays: 5,
-      status: 'PENDING',
-      reason: 'Vacaciones de otoño',
-      createdAt: '2026-09-01T09:30:00',
-    },
-    {
-      id: 'vacation-request-3',
-      userId: '3',
-      userName: 'Carlos Martín',
-      startDate: '2026-10-19',
-      endDate: '2026-10-23',
-      workingDays: 5,
-      status: 'PENDING',
-      reason: 'Viaje programado',
-      createdAt: '2026-09-15T12:15:00',
-    },
-  ]);
+
+  private readonly requestsState = signal<VacationRequest[]>([]);
 
   readonly requests = this.requestsState.asReadonly();
 
@@ -53,6 +36,43 @@ export class VacationsService {
       name: user.displayName,
     })),
   );
+
+  load(): void {
+    this.apiService.get<VacationDto[]>('vacations').subscribe({
+      next: (requests) => this.requestsState.set(this.sort(requests.map(this.fromDto))),
+      error: () => this.requestsState.set([]),
+    });
+  }
+
+  clear(): void {
+    this.requestsState.set([]);
+  }
+
+  create(request: VacationCreateRequest): Observable<VacationRequest> {
+    return this.apiService.post<VacationDto>('vacations', request).pipe(
+      map(this.fromDto),
+      tap((created) => this.requestsState.update((requests) => this.sort([...requests, created]))),
+    );
+  }
+
+  cancel(requestId: string): Observable<VacationRequest> {
+    return this.apiService
+      .post<VacationDto>(`vacations/${requestId}/cancel`, {})
+      .pipe(map(this.fromDto), tap(this.replace));
+  }
+
+  decide(
+    requestId: string,
+    decision: VacationDecision,
+    adminComment?: string,
+  ): Observable<VacationRequest> {
+    return this.apiService
+      .post<VacationDto>(`admin/vacations/${requestId}/decision`, {
+        decision,
+        adminComment: adminComment?.trim() || undefined,
+      })
+      .pipe(map(this.fromDto), tap(this.replace));
+  }
 
   getRequestsByUser(userId: string): VacationRequest[] {
     return this.requestsState().filter((request) => request.userId === userId);
@@ -68,44 +88,25 @@ export class VacationsService {
     });
   }
 
-  createRequest(request: Omit<VacationRequest, 'id' | 'status' | 'createdAt'>): VacationRequest {
-    const newRequest: VacationRequest = {
-      ...request,
-      id: `vacation-request-${Date.now()}`,
-      status: 'PENDING',
-      createdAt: new Date().toISOString(),
-    };
-
-    this.requestsState.update((requests) => [...requests, newRequest]);
-
-    return newRequest;
-  }
-
-  cancelRequest(requestId: string): void {
-    this.updateRequest(requestId, (request) =>
-      request.status === 'PENDING'
-        ? {
-            ...request,
-            status: 'CANCELLED',
-          }
-        : request,
-    );
-  }
-
-  updateStatus(requestId: string, status: VacationRequestStatus, adminComment?: string): void {
-    this.updateRequest(requestId, (request) => ({
-      ...request,
-      status,
-      adminComment: adminComment?.trim() || undefined,
-    }));
-  }
-
-  private updateRequest(
-    requestId: string,
-    update: (request: VacationRequest) => VacationRequest,
-  ): void {
+  private readonly replace = (updated: VacationRequest): void => {
     this.requestsState.update((requests) =>
-      requests.map((request) => (request.id === requestId ? update(request) : request)),
+      this.sort(requests.map((request) => (request.id === updated.id ? updated : request))),
+    );
+  };
+
+  private fromDto(dto: VacationDto): VacationRequest {
+    return {
+      ...dto,
+      reason: dto.reason ?? undefined,
+      adminComment: dto.adminComment ?? undefined,
+    };
+  }
+
+  private sort(requests: VacationRequest[]): VacationRequest[] {
+    return [...requests].sort(
+      (first, second) =>
+        second.startDate.localeCompare(first.startDate) ||
+        second.createdAt.localeCompare(first.createdAt),
     );
   }
 }

@@ -5,6 +5,7 @@ import { VacationRequestList } from '../../components/vacation-request-list/vaca
 import { VacationRequest } from '../../models/vacation-request.model';
 import { VacationsService } from '../../services/vacations.service';
 import { AuthService } from '../../../../core/auth/auth';
+import { toApiError } from '../../../../core/http/api-error';
 
 @Component({
   selector: 'yko-my-vacation-page',
@@ -26,15 +27,33 @@ export class MyVacationPage {
   });
 
   readonly successMessage = signal('');
+  readonly errorMessage = signal('');
 
   requestCreated(request: VacationRequest): void {
+    this.errorMessage.set('');
     this.successMessage.set(
       `Solicitud creada correctamente para ${request.workingDays} día(s) laborable(s).`,
     );
   }
 
   cancelRequest(requestId: string): void {
-    this.vacationsService.cancelRequest(requestId);
-    this.successMessage.set('Solicitud cancelada correctamente.');
+    this.vacationsService.cancel(requestId).subscribe({
+      next: () => {
+        this.errorMessage.set('');
+        this.successMessage.set('Solicitud cancelada correctamente.');
+      },
+      error: (error: unknown) => {
+        this.successMessage.set('');
+
+        if (toApiError(error).code === 'INVALID_STATUS') {
+          this.errorMessage.set('La solicitud ya no se puede cancelar porque ha sido resuelta.');
+          this.vacationsService.load();
+
+          return;
+        }
+
+        this.errorMessage.set('No se pudo cancelar la solicitud. Inténtalo de nuevo.');
+      },
+    });
   }
 }

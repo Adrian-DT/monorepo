@@ -24,3 +24,11 @@
   border: 1px solid #86efac;
   border-radius: 0.375rem;
 }
+
+.yko-error-message {
+  padding: 0.75rem 1rem;
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 0.375rem;
+}

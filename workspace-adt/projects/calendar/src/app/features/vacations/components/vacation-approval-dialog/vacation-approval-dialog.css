@@ -81,3 +81,19 @@
   color: #ffffff;
   background: #16a34a;
 }
+
+.yko-vacation-approval-dialog__note {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.yko-vacation-approval-dialog__error {
+  margin: 0;
+  color: #991b1b;
+}
+
+.yko-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

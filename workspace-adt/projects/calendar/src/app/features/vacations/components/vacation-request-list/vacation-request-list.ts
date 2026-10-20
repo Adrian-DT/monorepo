@@ -11,7 +11,7 @@ import { VacationRequest, VacationRequestStatus } from '../../models/vacation-re
 export class VacationRequestList {
   readonly requests = input.required<VacationRequest[]>();
 
-  readonly cancel = output<string>();
+  readonly cancelRequested = output<string>();
 
   getStatusLabel(status: VacationRequestStatus): string {
     const labels: Record<VacationRequestStatus, string> = {

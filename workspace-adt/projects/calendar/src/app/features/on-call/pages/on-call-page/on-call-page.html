@@ -11,9 +11,12 @@
     </p>
   }
 
-  <yko-on-call-assignment-form (onCallAssignmentCreated)="assignmentCreated($event)">
+  <yko-on-call-assignment-form (assignmentCreated)="assignmentCreated($event)">
   </yko-on-call-assignment-form>
 
-  <yko-on-call-assignment-list [assignments]="assignments()" (cancel)="cancelAssignment($event)">
+  <yko-on-call-assignment-list
+    [assignments]="assignments()"
+    (cancelRequested)="cancelAssignment($event)"
+  >
   </yko-on-call-assignment-list>
 </section>

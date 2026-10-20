@@ -8,6 +8,7 @@ import com.yko.calendar.holidays.HolidayNotFoundException;
 import com.yko.calendar.users.DuplicateFieldException;
 import com.yko.calendar.users.LastAdministratorException;
 import com.yko.calendar.users.UserNotFoundException;
+import com.yko.calendar.vacations.VacationRuleException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -98,6 +99,17 @@ public class ApiExceptionHandler {
                 exception.getMessage()
         );
         problem.setProperty("code", "DUPLICATE_DATE");
+
+        return problem;
+    }
+
+    @ExceptionHandler(VacationRuleException.class)
+    public ProblemDetail vacationRule(VacationRuleException exception) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                exception.getStatus(),
+                exception.getMessage()
+        );
+        problem.setProperty("code", exception.getCode());
 
         return problem;
     }

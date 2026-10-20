@@ -67,6 +67,7 @@ describe('AuthService', () => {
     http.expectOne(`${baseUrl}/users`).flush([]);
     http.expectOne(`${baseUrl}/admin/users`).flush([admin]);
     http.expectOne(`${baseUrl}/holidays`).flush([]);
+    http.expectOne(`${baseUrl}/vacations`).flush([]);
 
     expect(service.isAuthenticated()).toBe(true);
     expect(service.isAdmin()).toBe(true);
@@ -86,6 +87,7 @@ describe('AuthService', () => {
     http.expectOne(`${baseUrl}/users`).flush([]);
     http.expectNone(`${baseUrl}/admin/users`);
     http.expectOne(`${baseUrl}/holidays`).flush([]);
+    http.expectOne(`${baseUrl}/vacations`).flush([]);
 
     expect(service.isAdmin()).toBe(false);
   });
@@ -119,6 +121,7 @@ describe('AuthService', () => {
     http.expectOne(`${baseUrl}/users`).flush([]);
     http.expectOne(`${baseUrl}/admin/users`).flush([admin]);
     http.expectOne(`${baseUrl}/holidays`).flush([]);
+    http.expectOne(`${baseUrl}/vacations`).flush([]);
 
     expect(service.isAuthenticated()).toBe(true);
   });

@@ -25,7 +25,7 @@
             </span>
 
             @if (canCancel(request)) {
-              <button type="button" (click)="cancel.emit(request.id)">Cancelar</button>
+              <button type="button" (click)="cancelRequested.emit(request.id)">Cancelar</button>
             }
           </div>
         </article>

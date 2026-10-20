@@ -23,7 +23,7 @@ export class OnCallAssignmentForm {
   private readonly formBuilder = inject(FormBuilder);
   private readonly onCallService = inject(OnCallService);
 
-  readonly onCallAssignmentCreated = output<OnCallAssignment>();
+  readonly assignmentCreated = output<OnCallAssignment>();
   readonly users = this.onCallService.users;
   readonly overlapMessage = signal('');
 
@@ -81,7 +81,7 @@ export class OnCallAssignmentForm {
       notes: '',
     });
 
-    this.onCallAssignmentCreated.emit(assignment);
+    this.assignmentCreated.emit(assignment);
   }
 
   changeUser(userId: string): void {

@@ -10,8 +10,14 @@
     </p>
   }
 
+  @if (errorMessage()) {
+    <p class="yko-error-message">
+      {{ errorMessage() }}
+    </p>
+  }
+
   <yko-vacation-request-form (submitted)="requestCreated($event)"> </yko-vacation-request-form>
 
-  <yko-vacation-request-list [requests]="requests()" (cancel)="cancelRequest($event)">
+  <yko-vacation-request-list [requests]="requests()" (cancelRequested)="cancelRequest($event)">
   </yko-vacation-request-list>
 </section>
