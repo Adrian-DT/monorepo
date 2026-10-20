@@ -185,3 +185,21 @@
     flex-direction: column;
   }
 }
+
+.yko-secondary-button {
+  padding: 0.65rem 1rem;
+  color: #374151;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.yko-secondary-button:hover {
+  background: #f3f4f6;
+}
+
+.yko-primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

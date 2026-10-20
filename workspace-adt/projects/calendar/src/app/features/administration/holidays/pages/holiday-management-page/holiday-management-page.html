@@ -20,9 +20,9 @@
   }
 
   <section class="yko-holiday-form-card">
-    <h2>Añadir festivo</h2>
+    <h2>{{ editingHoliday() ? 'Editar festivo' : 'Añadir festivo' }}</h2>
 
-    <form [formGroup]="form" (ngSubmit)="addHoliday()">
+    <form [formGroup]="form" (ngSubmit)="submit()">
       <div class="yko-holiday-form__row">
         <div class="yko-form-field">
           <label for="holidayDate"> Fecha </label>
@@ -81,7 +81,15 @@
         </div>
       </div>
 
-      <button type="submit" class="yko-primary-button">Añadir festivo</button>
+      <button type="submit" class="yko-primary-button" [disabled]="saving()">
+        {{ editingHoliday() ? 'Guardar cambios' : 'Añadir festivo' }}
+      </button>
+
+      @if (editingHoliday()) {
+        <button type="button" class="yko-secondary-button" (click)="cancelEditing()">
+          Cancelar edición
+        </button>
+      }
     </form>
   </section>
 
@@ -129,6 +137,8 @@
                   {{ holiday.location || '—' }}
                 </td>
                 <td>
+                  <button type="button" (click)="startEditing(holiday)">Editar</button>
+
                   <button type="button" class="yko-delete-button" (click)="removeHoliday(holiday)">
                     Eliminar
                   </button>

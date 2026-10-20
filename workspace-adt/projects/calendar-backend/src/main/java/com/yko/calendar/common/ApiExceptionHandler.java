@@ -3,11 +3,14 @@ package com.yko.calendar.common;
 import com.yko.calendar.auth.InvalidCredentialsException;
 import com.yko.calendar.auth.InvalidCurrentPasswordException;
 import com.yko.calendar.auth.InvalidResetTokenException;
+import com.yko.calendar.holidays.DuplicateHolidayDateException;
+import com.yko.calendar.holidays.HolidayNotFoundException;
 import com.yko.calendar.users.DuplicateFieldException;
 import com.yko.calendar.users.LastAdministratorException;
 import com.yko.calendar.users.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -76,6 +79,38 @@ public class ApiExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 exception.getMessage()
         );
+    }
+
+    @ExceptionHandler(HolidayNotFoundException.class)
+    public ProblemDetail holidayNotFound(HolidayNotFoundException exception) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler(DuplicateHolidayDateException.class)
+    public ProblemDetail duplicateHolidayDate(
+            DuplicateHolidayDateException exception
+    ) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT,
+                exception.getMessage()
+        );
+        problem.setProperty("code", "DUPLICATE_DATE");
+
+        return problem;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ProblemDetail unreadable(HttpMessageNotReadableException exception) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                "Malformed request body"
+        );
+        problem.setProperty("code", "MALFORMED_BODY");
+
+        return problem;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

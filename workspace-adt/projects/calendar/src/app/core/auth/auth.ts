@@ -5,6 +5,7 @@ import { Observable, catchError, map, of, tap } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../../features/auth/models/login.model';
 import { UserService } from '../../features/administration/users/services/user.service';
 import { ApiService } from '../http/api.service';
+import { HolidaysService } from '../../features/administration/holidays/services/holidays.service';
 import { User } from './user.model';
 
 const TOKEN_KEY = 'yko-access-token';
@@ -16,6 +17,7 @@ const USER_KEY = 'yko-user';
 export class AuthService {
   private readonly apiService = inject(ApiService);
   private readonly userService = inject(UserService);
+  private readonly holidaysService = inject(HolidaysService);
 
   readonly accessToken = signal<string | null>(sessionStorage.getItem(TOKEN_KEY));
 
@@ -84,6 +86,7 @@ export class AuthService {
     sessionStorage.setItem(USER_KEY, JSON.stringify(user));
 
     this.userService.load(user.role === 'ADMIN');
+    this.holidaysService.load();
   }
 
   private clearSession(): void {
@@ -94,6 +97,7 @@ export class AuthService {
     sessionStorage.removeItem(USER_KEY);
 
     this.userService.clear();
+    this.holidaysService.clear();
   }
 
   private loadStoredUser(): User | null {

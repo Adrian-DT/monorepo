@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { toApiError } from '../../../../../core/http/api-error';
 import { Holiday, HolidayScope } from '../../models/holiday.model';
 import { HolidaysService } from '../../services/holidays.service';
 
@@ -19,6 +20,8 @@ export class HolidayManagementPage {
   readonly selectedYear = signal(new Date().getFullYear());
   readonly feedbackMessage = signal('');
   readonly errorMessage = signal('');
+  readonly saving = signal(false);
+  readonly editingHoliday = signal<Holiday | null>(null);
 
   readonly holidays = computed(() => this.holidaysService.getByYear(this.selectedYear()));
 
@@ -31,7 +34,11 @@ export class HolidayManagementPage {
     location: ['', Validators.maxLength(120)],
   });
 
-  addHoliday(): void {
+  submit(): void {
+    if (this.saving()) {
+      return;
+    }
+
     this.feedbackMessage.set('');
     this.errorMessage.set('');
 
@@ -42,37 +49,78 @@ export class HolidayManagementPage {
 
     const value = this.form.getRawValue();
 
-    try {
-      const holiday = this.holidaysService.addHoliday({
-        date: value.date,
-        name: value.name.trim(),
-        scope: value.scope,
-        location: value.location.trim() || undefined,
-      });
+    const request = {
+      date: value.date,
+      name: value.name.trim(),
+      scope: value.scope,
+      location: value.location.trim() || undefined,
+    };
 
-      this.selectedYear.set(Number(holiday.date.slice(0, 4)));
+    const editing = this.editingHoliday();
 
-      this.form.reset({
-        date: '',
-        name: '',
-        scope: 'NATIONAL',
-        location: '',
-      });
+    this.saving.set(true);
 
-      this.feedbackMessage.set(`Festivo "${holiday.name}" añadido correctamente.`);
-    } catch (error) {
-      this.errorMessage.set(
-        error instanceof Error ? error.message : 'No se ha podido añadir el festivo.',
-      );
-    }
+    const operation = editing
+      ? this.holidaysService.update(editing.id, request)
+      : this.holidaysService.add(request);
+
+    operation.subscribe({
+      next: (holiday) => {
+        this.saving.set(false);
+        this.selectedYear.set(Number(holiday.date.slice(0, 4)));
+        this.resetForm();
+
+        this.feedbackMessage.set(
+          editing
+            ? `Festivo "${holiday.name}" actualizado correctamente.`
+            : `Festivo "${holiday.name}" añadido correctamente.`,
+        );
+      },
+      error: (error: unknown) => {
+        this.saving.set(false);
+        this.errorMessage.set(this.describeError(error, editing !== null));
+      },
+    });
+  }
+
+  startEditing(holiday: Holiday): void {
+    this.feedbackMessage.set('');
+    this.errorMessage.set('');
+
+    this.editingHoliday.set(holiday);
+
+    this.form.reset({
+      date: holiday.date,
+      name: holiday.name,
+      scope: holiday.scope,
+      location: holiday.location ?? '',
+    });
+  }
+
+  cancelEditing(): void {
+    this.errorMessage.set('');
+    this.resetForm();
   }
 
   removeHoliday(holiday: Holiday): void {
-    this.holidaysService.removeHoliday(holiday.id);
+    this.holidaysService.remove(holiday.id).subscribe({
+      next: () => {
+        if (this.editingHoliday()?.id === holiday.id) {
+          this.resetForm();
+        }
 
-    this.feedbackMessage.set(`Festivo "${holiday.name}" eliminado correctamente.`);
-
-    this.errorMessage.set('');
+        this.feedbackMessage.set(`Festivo "${holiday.name}" eliminado correctamente.`);
+        this.errorMessage.set('');
+      },
+      error: (error: unknown) => {
+        this.feedbackMessage.set('');
+        this.errorMessage.set(
+          toApiError(error).status === 404
+            ? 'El festivo ya no existe.'
+            : 'No se ha podido eliminar el festivo.',
+        );
+      },
+    });
   }
 
   changeYear(event: Event): void {
@@ -89,6 +137,37 @@ export class HolidayManagementPage {
     const control = this.form.get(controlName);
 
     return Boolean(control?.touched && control.hasError(errorName));
+  }
+
+  private resetForm(): void {
+    this.editingHoliday.set(null);
+
+    this.form.reset({
+      date: '',
+      name: '',
+      scope: 'NATIONAL',
+      location: '',
+    });
+  }
+
+  private describeError(error: unknown, editing: boolean): string {
+    const apiError = toApiError(error);
+
+    if (apiError.status === 409) {
+      return 'Ya existe un festivo configurado para esa fecha.';
+    }
+
+    if (apiError.status === 404) {
+      return 'El festivo ya no existe.';
+    }
+
+    if (apiError.status === 400) {
+      return 'Los datos del festivo no son válidos.';
+    }
+
+    return editing
+      ? 'No se ha podido actualizar el festivo.'
+      : 'No se ha podido añadir el festivo.';
   }
 
   private buildYears(): number[] {

@@ -7,3 +7,10 @@ export interface Holiday {
   scope: HolidayScope;
   location?: string;
 }
+
+export interface HolidayRequest {
+  date: string;
+  name: string;
+  scope: HolidayScope;
+  location?: string;
+}
