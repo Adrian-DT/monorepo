@@ -52,7 +52,18 @@ public class VacationRequest {
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 
+    @Column(name = "parent_vacation_id")
+    private UUID parentVacationId;
+
     public VacationRequest() {
+    }
+
+    public UUID getParentVacationId() {
+        return parentVacationId;
+    }
+
+    public void setParentVacationId(UUID parentVacationId) {
+        this.parentVacationId = parentVacationId;
     }
 
     public UUID getId() {

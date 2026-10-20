@@ -1,0 +1,125 @@
+.yko-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(15 23 42 / 50%);
+}
+
+.yko-cancel-dialog {
+  width: min(100%, 34rem);
+  max-height: 100%;
+  overflow: auto;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1.25rem 2.5rem rgb(15 23 42 / 25%);
+}
+
+.yko-cancel-dialog__header,
+.yko-cancel-dialog__content,
+.yko-cancel-dialog__actions {
+  padding: 1.25rem;
+}
+
+.yko-cancel-dialog__header {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.yko-cancel-dialog__header h2 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 1.125rem;
+}
+
+.yko-cancel-dialog__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.yko-cancel-dialog__content p {
+  margin: 0;
+  color: #475569;
+}
+
+.yko-cancel-dialog__scope {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid #dbe3ee;
+  border-radius: 0.375rem;
+}
+
+.yko-cancel-dialog__scope legend {
+  padding: 0 0.35rem;
+  color: #334155;
+  font-weight: 600;
+}
+
+.yko-cancel-dialog__dates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.yko-cancel-dialog__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.yko-cancel-dialog__field input,
+.yko-cancel-dialog__content textarea {
+  padding: 0.6rem;
+  font: inherit;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+}
+
+.yko-cancel-dialog__content textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.yko-cancel-dialog__note {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.yko-cancel-dialog__error {
+  color: #991b1b !important;
+}
+
+.yko-cancel-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.yko-button {
+  padding: 0.6rem 0.9rem;
+  border: 0;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.yko-button--secondary {
+  color: #334155;
+  background: #e2e8f0;
+}
+
+.yko-button--reject {
+  color: #ffffff;
+  background: #dc2626;
+}
+
+.yko-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

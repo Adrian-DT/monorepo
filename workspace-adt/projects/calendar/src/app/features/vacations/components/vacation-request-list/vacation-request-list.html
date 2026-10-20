@@ -17,6 +17,28 @@
             <p>{{ request.workingDays }} día(s) laborable(s)</p>
 
             <p>{{ request.reason }}</p>
+
+            @if (pendingCancellation(request); as pending) {
+              <p class="yko-vacation-card__notice">
+                Cancelación solicitada: {{ pending.fromDate }} — {{ pending.toDate }}. Pendiente de
+                revisión.
+              </p>
+            }
+
+            @if (lastResolution(request); as resolved) {
+              <p class="yko-vacation-card__notice yko-vacation-card__notice--info">
+                @if (resolved.status === 'APPROVED') {
+                  Cancelación aplicada ({{ resolved.fromDate }} — {{ resolved.toDate }}).
+                } @else {
+                  Tu solicitud de cancelación ({{ resolved.fromDate }} — {{ resolved.toDate }}) fue
+                  rechazada.
+                }
+
+                @if (resolved.resolutionComment) {
+                  Comentario: {{ resolved.resolutionComment }}
+                }
+              </p>
+            }
           </div>
 
           <div class="yko-vacation-card__actions">
@@ -26,6 +48,18 @@
 
             @if (canCancel(request)) {
               <button type="button" (click)="cancelRequested.emit(request.id)">Cancelar</button>
+            }
+
+            @if (canRequestCancellation(request)) {
+              <button type="button" (click)="cancellationRequested.emit(request)">
+                Solicitar cancelación
+              </button>
+            }
+
+            @if (pendingCancellation(request); as pending) {
+              <button type="button" (click)="cancellationWithdrawn.emit(pending.id)">
+                Retirar solicitud
+              </button>
             }
           </div>
         </article>

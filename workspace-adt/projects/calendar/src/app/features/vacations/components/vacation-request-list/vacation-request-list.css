@@ -103,3 +103,16 @@
     align-items: flex-start;
   }
 }
+
+.yko-vacation-card__notice {
+  padding: 0.4rem 0.6rem;
+  color: #92400e !important;
+  background: #fef3c7;
+  border-radius: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.yko-vacation-card__notice--info {
+  color: #1e40af !important;
+  background: #dbeafe;
+}

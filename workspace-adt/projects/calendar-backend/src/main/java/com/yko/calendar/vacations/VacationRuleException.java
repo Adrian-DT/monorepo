@@ -62,4 +62,44 @@ public class VacationRuleException extends RuntimeException {
                 "The period no longer includes any working day; reject the request instead"
         );
     }
+
+    public static VacationRuleException rangeOutsidePeriod() {
+        return new VacationRuleException(
+                HttpStatus.BAD_REQUEST,
+                "RANGE_OUTSIDE_PERIOD",
+                "The range must be inside the approved vacation period"
+        );
+    }
+
+    public static VacationRuleException pastDates() {
+        return new VacationRuleException(
+                HttpStatus.BAD_REQUEST,
+                "PAST_DATES",
+                "Days that have already passed cannot be cancelled by the user"
+        );
+    }
+
+    public static VacationRuleException cancellationRequestPending() {
+        return new VacationRuleException(
+                HttpStatus.CONFLICT,
+                "CANCELLATION_REQUEST_PENDING",
+                "Resolve the pending cancellation request first"
+        );
+    }
+
+    public static VacationRuleException cancellationAlreadyRequested() {
+        return new VacationRuleException(
+                HttpStatus.CONFLICT,
+                "CANCELLATION_ALREADY_REQUESTED",
+                "There is already a pending cancellation request for this vacation"
+        );
+    }
+
+    public static VacationRuleException cancellationNotFound(UUID id) {
+        return new VacationRuleException(
+                HttpStatus.NOT_FOUND,
+                "CANCELLATION_NOT_FOUND",
+                "Cancellation request " + id + " not found"
+        );
+    }
 }

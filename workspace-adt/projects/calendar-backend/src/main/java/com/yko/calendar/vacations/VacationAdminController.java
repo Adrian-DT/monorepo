@@ -16,9 +16,14 @@ import java.util.UUID;
 public class VacationAdminController {
 
     private final VacationService vacationService;
+    private final VacationCancellationService cancellationService;
 
-    public VacationAdminController(VacationService vacationService) {
+    public VacationAdminController(
+            VacationService vacationService,
+            VacationCancellationService cancellationService
+    ) {
         this.vacationService = vacationService;
+        this.cancellationService = cancellationService;
     }
 
     @PostMapping("/{id}/decision")
@@ -28,5 +33,23 @@ public class VacationAdminController {
             @Valid @RequestBody VacationDecisionRequest request
     ) {
         return vacationService.decide(principal.getUser(), id, request);
+    }
+
+    @PostMapping("/{id}/cancel")
+    public CancellationResult cancel(
+            @AuthenticationPrincipal AuthenticatedUser principal,
+            @PathVariable UUID id,
+            @Valid @RequestBody(required = false) AdminCancelRequest request
+    ) {
+        return cancellationService.cancelDirectly(principal.getUser(), id, request);
+    }
+
+    @PostMapping("/cancellation-requests/{id}/decision")
+    public CancellationResult decideCancellation(
+            @AuthenticationPrincipal AuthenticatedUser principal,
+            @PathVariable UUID id,
+            @Valid @RequestBody CancellationDecisionRequest request
+    ) {
+        return cancellationService.decide(principal.getUser(), id, request);
     }
 }

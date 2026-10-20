@@ -82,6 +82,20 @@
                 <button type="button" class="yko-review-button" (click)="reviewRequest(request)">
                   Revisar
                 </button>
+              } @else if (request.status === 'APPROVED') {
+                <button
+                  type="button"
+                  class="yko-cancel-button"
+                  [disabled]="hasPendingCancellation(request)"
+                  [title]="
+                    hasPendingCancellation(request)
+                      ? 'Hay una solicitud de cancelación pendiente: resuélvela primero'
+                      : 'Cancelar total o parcialmente estas vacaciones'
+                  "
+                  (click)="openCancelDialog(request)"
+                >
+                  Cancelar
+                </button>
               } @else {
                 <span class="yko-no-action">—</span>
               }
@@ -97,6 +111,71 @@
       </tbody>
     </table>
   </section>
+
+  <section class="yko-cancellation-requests">
+    <h2>Solicitudes de cancelación pendientes ({{ pendingCancellations().length }})</h2>
+
+    @if (pendingCancellations().length === 0) {
+      <p class="yko-no-action">No hay solicitudes de cancelación pendientes.</p>
+    } @else {
+      <div class="yko-request-table-wrapper">
+        <table class="yko-request-table">
+          <thead>
+            <tr>
+              <th>Empleado</th>
+              <th>Vacaciones aprobadas</th>
+              <th>Tramo a cancelar</th>
+              <th>Motivo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (item of pendingCancellations(); track item.id) {
+              <tr>
+                <td>{{ item.userName }}</td>
+                <td>{{ item.originalStartDate }} — {{ item.originalEndDate }}</td>
+                <td>{{ item.fromDate }} — {{ item.toDate }}</td>
+                <td>{{ item.requestReason }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="yko-review-button"
+                    (click)="openReviewDialog(item)"
+                  >
+                    Revisar
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+
+  @if (cancelTarget(); as target) {
+    <yko-vacation-cancel-dialog
+      mode="ADMIN"
+      [vacation]="target"
+      [saving]="cancelSaving()"
+      [errorMessage]="cancelError()"
+      (confirmed)="confirmCancel($event)"
+      (cancelled)="closeCancelDialog()"
+    >
+    </yko-vacation-cancel-dialog>
+  }
+
+  @if (reviewTarget(); as target) {
+    <yko-vacation-cancellation-review-dialog
+      [cancellation]="target"
+      [saving]="reviewSaving()"
+      [errorMessage]="reviewError()"
+      (confirmed)="confirmReview($event)"
+      (cancelled)="closeReviewDialog()"
+    >
+    </yko-vacation-cancellation-review-dialog>
+  }
 
   @if (selectedRequest(); as request) {
     <yko-vacation-approval-dialog

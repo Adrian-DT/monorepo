@@ -27,6 +27,8 @@ public interface UserRepository
 
     List<User> findByActiveTrueOrderByDisplayNameAsc();
 
+    List<User> findByRoleAndActiveTrue(UserRole role);
+
     List<User> findAllByOrderByDisplayNameAsc();
 
     long countByRoleAndActiveTrue(UserRole role);

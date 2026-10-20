@@ -18,6 +18,24 @@
 
   <yko-vacation-request-form (submitted)="requestCreated($event)"> </yko-vacation-request-form>
 
-  <yko-vacation-request-list [requests]="requests()" (cancelRequested)="cancelRequest($event)">
+  <yko-vacation-request-list
+    [requests]="requests()"
+    [cancellations]="cancellations()"
+    (cancelRequested)="cancelRequest($event)"
+    (cancellationRequested)="openCancellationDialog($event)"
+    (cancellationWithdrawn)="withdrawCancellation($event)"
+  >
   </yko-vacation-request-list>
+
+  @if (cancellationTarget(); as target) {
+    <yko-vacation-cancel-dialog
+      mode="USER"
+      [vacation]="target"
+      [saving]="dialogSaving()"
+      [errorMessage]="dialogError()"
+      (confirmed)="submitCancellation($event)"
+      (cancelled)="closeCancellationDialog()"
+    >
+    </yko-vacation-cancel-dialog>
+  }
 </section>
