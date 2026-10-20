@@ -57,6 +57,10 @@
               <button type="button" (click)="toggleActive(user)">
                 {{ user.active ? 'Desactivar' : 'Activar' }}
               </button>
+
+              @if (user.active) {
+                <button type="button" (click)="resendInvitation(user)">Reenviar invitación</button>
+              }
             </td>
           </tr>
         }

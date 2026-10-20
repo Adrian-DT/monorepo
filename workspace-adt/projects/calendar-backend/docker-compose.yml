@@ -12,5 +12,13 @@ services:
     volumes:
       - calendar_postgres_data:/var/lib/postgresql/data
 
+  mailpit:
+    image: axllent/mailpit:v1.31.6
+    container_name: yko-calendar-mailpit
+    restart: unless-stopped
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+
 volumes:
   calendar_postgres_data:

@@ -1,9 +1,16 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { User, UserRole } from '../../../../../core/auth/user.model';
+import { toApiError } from '../../../../../core/http/api-error';
 import { UserService } from '../../services/user.service';
+
+export interface UserSavedEvent {
+  user: User;
+  created: boolean;
+  invitationSent: boolean;
+}
 
 @Component({
   selector: 'yko-user-form',
@@ -18,8 +25,11 @@ export class UserForm {
 
   readonly user = input<User | null>(null);
 
-  readonly saved = output<User>();
+  readonly saved = output<UserSavedEvent>();
   readonly cancelled = output<void>();
+
+  readonly saving = signal(false);
+  readonly errorMessage = signal('');
 
   readonly form = this.formBuilder.nonNullable.group({
     username: [
@@ -46,6 +56,8 @@ export class UserForm {
         email: user?.email ?? '',
         role: user?.role ?? 'USER',
       });
+
+      this.errorMessage.set('');
     });
   }
 
@@ -54,6 +66,10 @@ export class UserForm {
   }
 
   submit(): void {
+    if (this.saving()) {
+      return;
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -62,71 +78,73 @@ export class UserForm {
     const value = this.form.getRawValue();
     const currentUser = this.user();
 
-    if (!this.userService.isUsernameAvailable(value.username, currentUser?.id)) {
-      this.form.controls.username.setErrors({
-        duplicate: true,
-      });
+    const request = {
+      username: value.username.trim(),
+      displayName: value.displayName.trim(),
+      email: value.email.trim(),
+      role: value.role,
+    };
 
-      return;
-    }
-
-    if (!this.userService.isEmailAvailable(value.email, currentUser?.id)) {
-      this.form.controls.email.setErrors({
-        duplicate: true,
-      });
-
-      return;
-    }
+    this.saving.set(true);
+    this.errorMessage.set('');
 
     if (currentUser) {
-      const updated = this.userService.updateUser(currentUser.id, {
-        username: value.username.trim(),
-        displayName: value.displayName.trim(),
-        email: value.email.trim(),
-        role: value.role,
+      this.userService.update(currentUser.id, request).subscribe({
+        next: (user) => {
+          this.saving.set(false);
+          this.saved.emit({ user, created: false, invitationSent: false });
+        },
+        error: (error: unknown) => this.handleError(error),
       });
-
-      if (!updated) {
-        return;
-      }
-
-      const savedUser = this.userService.getById(currentUser.id);
-
-      if (savedUser) {
-        this.saved.emit(savedUser);
-      }
 
       return;
     }
 
-    try {
-      const createdUser = this.userService.addUser({
-        username: value.username.trim(),
-        displayName: value.displayName.trim(),
-        email: value.email.trim(),
-        role: value.role,
-        active: true,
-      });
-
-      this.saved.emit(createdUser);
-
-      this.form.reset({
-        username: '',
-        displayName: '',
-        email: '',
-        role: 'USER',
-      });
-    } catch (error) {
-      this.form.controls.username.setErrors({
-        duplicate: true,
-        error: error,
-      });
-    }
+    this.userService.create(request).subscribe({
+      next: (result) => {
+        this.saving.set(false);
+        this.saved.emit({
+          user: result.user,
+          created: true,
+          invitationSent: result.invitationSent,
+        });
+      },
+      error: (error: unknown) => this.handleError(error),
+    });
   }
 
   hasError(controlName: string, errorName: string): boolean {
     const control = this.form.get(controlName);
 
     return Boolean(control?.touched && control.hasError(errorName));
+  }
+
+  private handleError(error: unknown): void {
+    this.saving.set(false);
+
+    const apiError = toApiError(error);
+
+    if (apiError.status === 409 && apiError.code === 'DUPLICATE_FIELD' && apiError.field) {
+      const control = this.form.get(apiError.field);
+
+      if (control) {
+        control.setErrors({ duplicate: true });
+        control.markAsTouched();
+
+        return;
+      }
+    }
+
+    if (apiError.status === 409 && apiError.code === 'LAST_ADMINISTRATOR') {
+      this.errorMessage.set('No puedes quitar el rol del último administrador activo.');
+
+      return;
+    }
+
+    this.errorMessage.set(
+      apiError.status === 400
+        ? 'Los datos introducidos no son válidos.'
+        : 'No se pudo guardar el usuario. Inténtalo de nuevo.',
+    );
   }
 }

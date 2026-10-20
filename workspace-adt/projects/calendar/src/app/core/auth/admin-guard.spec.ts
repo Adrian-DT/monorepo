@@ -1,17 +1,33 @@
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router, UrlTree, provideRouter } from '@angular/router';
 
-import { adminGuardGuard } from './admin-guard-guard';
+import { adminGuard } from './admin-guard';
+import { AuthService } from './auth';
 
-describe('adminGuardGuard', () => {
+describe('adminGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>
-    TestBed.runInInjectionContext(() => adminGuardGuard(...guardParameters));
+    TestBed.runInInjectionContext(() => adminGuard(...guardParameters));
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
+  function setup(isAdmin: boolean): void {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        { provide: AuthService, useValue: { hasRole: () => isAdmin } },
+      ],
+    });
+  }
+
+  it('allows administrators', () => {
+    setup(true);
+
+    expect(executeGuard({} as never, {} as never)).toBe(true);
   });
 
-  it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+  it('redirects regular users to the calendar', () => {
+    setup(false);
+
+    const result = executeGuard({} as never, {} as never) as UrlTree;
+
+    expect(TestBed.inject(Router).serializeUrl(result)).toBe('/calendar');
   });
 });

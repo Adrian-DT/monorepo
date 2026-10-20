@@ -13,6 +13,10 @@ public interface UserRepository
             String username
     );
 
+    Optional<User> findByEmailIgnoreCase(
+            String email
+    );
+
     boolean existsByUsernameIgnoreCase(
             String username
     );
@@ -22,4 +26,8 @@ public interface UserRepository
     );
 
     List<User> findByActiveTrueOrderByDisplayNameAsc();
+
+    List<User> findAllByOrderByDisplayNameAsc();
+
+    long countByRoleAndActiveTrue(UserRole role);
 }

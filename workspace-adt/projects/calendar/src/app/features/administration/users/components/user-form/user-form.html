@@ -73,9 +73,17 @@
         Cancelar
       </button>
 
-      <button type="submit" class="yko-primary-button">
+      <button type="submit" class="yko-primary-button" [disabled]="saving()">
         {{ editing ? 'Guardar cambios' : 'Crear usuario' }}
       </button>
     </footer>
+
+    @if (errorMessage()) {
+      <small class="yko-error">{{ errorMessage() }}</small>
+    }
+
+    @if (!editing) {
+      <small>El usuario recibirá un correo para definir su contraseña.</small>
+    }
   </form>
 </section>

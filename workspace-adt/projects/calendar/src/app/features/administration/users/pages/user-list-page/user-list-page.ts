@@ -1,8 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 
 import { User, UserRole } from '../../../../../core/auth/user.model';
+import { toApiError } from '../../../../../core/http/api-error';
 import { UserService } from '../../services/user.service';
-import { UserForm } from '../../components/user-form/user-form';
+import { UserForm, UserSavedEvent } from '../../components/user-form/user-form';
 
 @Component({
   selector: 'yko-user-list-page',
@@ -36,47 +37,87 @@ export class UserListPage {
     this.creatingUser.set(false);
   }
 
-  userSaved(user: User): void {
-    this.feedbackMessage.set(
-      this.creatingUser()
-        ? `Usuario ${user.displayName} creado correctamente.`
-        : `Usuario ${user.displayName} actualizado correctamente.`,
-    );
+  userSaved(event: UserSavedEvent): void {
+    const name = event.user.displayName;
 
+    if (event.created) {
+      this.feedbackMessage.set(
+        event.invitationSent
+          ? `Usuario ${name} creado. Se ha enviado la invitación por correo.`
+          : `Usuario ${name} creado, pero no se pudo enviar la invitación. Puedes reenviarla.`,
+      );
+    } else {
+      this.feedbackMessage.set(`Usuario ${name} actualizado correctamente.`);
+    }
+
+    this.errorMessage.set('');
     this.closeEditor();
   }
 
   toggleActive(user: User): void {
-    const updated = this.userService.setActive(user.id, !user.active);
-
-    if (!updated) {
-      this.errorMessage.set('No puedes desactivar el último administrador activo.');
-
-      return;
-    }
-
-    this.feedbackMessage.set(
-      user.active
-        ? `${user.displayName} ha sido desactivado.`
-        : `${user.displayName} ha sido activado.`,
-    );
-
-    this.errorMessage.set('');
+    this.userService.setActive(user.id, !user.active).subscribe({
+      next: () => {
+        this.feedbackMessage.set(
+          user.active
+            ? `${user.displayName} ha sido desactivado.`
+            : `${user.displayName} ha sido activado.`,
+        );
+        this.errorMessage.set('');
+      },
+      error: (error: unknown) => {
+        this.feedbackMessage.set('');
+        this.errorMessage.set(
+          toApiError(error).code === 'LAST_ADMINISTRATOR'
+            ? 'No puedes desactivar el último administrador activo.'
+            : 'No se pudo actualizar el usuario.',
+        );
+      },
+    });
   }
 
   changeRole(user: User, event: Event): void {
-    const role = (event.target as HTMLSelectElement).value as UserRole;
+    const select = event.target as HTMLSelectElement;
+    const role = select.value as UserRole;
 
-    const updated = this.userService.updateUser(user.id, { role });
+    this.userService
+      .update(user.id, {
+        username: user.username,
+        displayName: user.displayName,
+        email: user.email,
+        role,
+      })
+      .subscribe({
+        next: () => {
+          this.feedbackMessage.set(`Rol de ${user.displayName} actualizado.`);
+          this.errorMessage.set('');
+        },
+        error: (error: unknown) => {
+          select.value = user.role;
+          this.feedbackMessage.set('');
+          this.errorMessage.set(
+            toApiError(error).code === 'LAST_ADMINISTRATOR'
+              ? 'No puedes quitar el rol del último administrador activo.'
+              : 'No se pudo actualizar el rol.',
+          );
+        },
+      });
+  }
 
-    if (!updated) {
-      this.errorMessage.set('No puedes quitar el rol del último administrador activo.');
-
-      return;
-    }
-
-    this.feedbackMessage.set(`Rol de ${user.displayName} actualizado.`);
-
-    this.errorMessage.set('');
+  resendInvitation(user: User): void {
+    this.userService.invite(user.id).subscribe({
+      next: (result) => {
+        if (result.invitationSent) {
+          this.feedbackMessage.set(`Invitación reenviada a ${user.email}.`);
+          this.errorMessage.set('');
+        } else {
+          this.feedbackMessage.set('');
+          this.errorMessage.set('No se pudo enviar la invitación.');
+        }
+      },
+      error: () => {
+        this.feedbackMessage.set('');
+        this.errorMessage.set('No se pudo enviar la invitación.');
+      },
+    });
   }
 }

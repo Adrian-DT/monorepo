@@ -28,16 +28,16 @@
       />
     </div>
 
-    @if (errorMessage) {
+    @if (errorMessage()) {
       <p class="yko-error-message">
-        {{ errorMessage }}
+        {{ errorMessage() }}
       </p>
     }
 
-    <button class="yko-login-button" type="submit">Entrar</button>
+    <button class="yko-login-button" type="submit" [disabled]="loading()">
+      {{ loading() ? 'Entrando...' : 'Entrar' }}
+    </button>
 
     <a routerLink="/forgot-password"> ¿Has olvidado tu contraseña? </a>
-
-    <small>Prueba inicial: admin / admin</small>
   </form>
 </section>
